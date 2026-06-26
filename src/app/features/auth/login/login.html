@@ -1,0 +1,50 @@
+<div class="container">
+  <!-- Left Side -->
+  <div class="left-panel">
+    <div class="logo">
+      <i class="fa-solid fa-graduation-cap"></i>
+      <span>Student Management System</span>
+    </div>
+    <h1>Welcome Back!</h1>
+    <h2>Sign in to your account</h2>
+    <p>Manage students, teachers, classes, attendance, exams and much more in one place.</p>
+    <img src="images/login-illustration.png" alt="Login Image" />
+  </div>
+  <div class="right-panel">
+    <div class="login-card">
+      <h2>Login</h2>
+      <p>Please enter your credentials to continue</p>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <label>Username</label>
+        <div class="input-box">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" formControlName="user_name" placeholder="Enter username" />
+        </div>
+        @if (f['user_name'].touched && f['user_name'].errors) {
+          <div class="text-danger mt-1">
+            @if (f['user_name'].errors['required']) {
+              <small>Username is required</small>
+            }
+          </div>
+        }
+        <label>Password</label>
+        <div class="input-box mb-3">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" formControlName="password" placeholder="Enter password" />
+          <i class="fa-solid fa-eye"></i>
+        </div>
+        @if (f['password'].touched && f['password'].errors) {
+          <div class="text-danger mt-1">
+            @if (f['password'].errors['required']) {
+              <small>Password is required</small>
+            }
+            @if (f['password'].errors['minlength']) {
+              <small>Password must be at least 6 characters</small>
+            }
+          </div>
+        }
+        <button type="submit" class="login-btn" [disabled]="loginForm.invalid">Login</button>
+      </form>
+    </div>
+  </div>
+</div>

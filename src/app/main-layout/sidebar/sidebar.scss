@@ -1,0 +1,107 @@
+.sidebar {
+  width: 270px;
+  height: 100vh;
+  background: #0f172a;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.sidebar .logo {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px;
+  font-size: 22px;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 15px 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin: 4px 12px;
+}
+
+.sidebar a,
+.sidebar .menu-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #cbd5e1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.sidebar a:hover,
+.sidebar .menu-toggle:hover {
+  background: #2563eb;
+  color: #fff;
+}
+
+.sidebar a.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+.menu-title {
+  color: #94a3b8;
+  font-size: 12px;
+  text-transform: uppercase;
+  padding: 15px 25px 8px;
+  font-weight: 600;
+}
+
+/* Child Menu */
+
+.sub-menu {
+  margin-left: 15px;
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  padding-left: 10px;
+}
+
+.sub-menu a {
+  padding: 10px 14px;
+  font-size: 14px;
+}
+
+.arrow {
+  transition: transform 0.3s ease;
+}
+
+.rotate {
+  transform: rotate(90deg);
+}
+
+/* Scrollbar */
+
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 20px;
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 240px;
+    z-index: 1000;
+  }
+}

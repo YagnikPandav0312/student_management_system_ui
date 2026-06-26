@@ -1,0 +1,25 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+.main-content {
+  margin-left: 270px;
+  width: calc(100% - 270px);
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
+  padding: 25px;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+  }
+}

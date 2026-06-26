@@ -1,0 +1,11 @@
+<div class="modal-header">
+    <h5 class="modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" (click)="confirmation(false)"></button>
+</div>
+<hr class="m-0">
+<div class="modal-body"><p class="m-0">{{message}}</p></div>
+<hr class="m-0">
+<div class="modal-footer">
+    <button class="btn btn-outline-secondary" (click)="confirmation(false)">No</button>
+    <button class="btn btn-danger" (click)="confirmation(true)">Yes</button>
+</div>
