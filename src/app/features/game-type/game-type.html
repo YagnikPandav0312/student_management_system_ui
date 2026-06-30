@@ -1,4 +1,4 @@
-<div class="game-types-page">
+<div class="feature-page">
   <!-- Page Header -->
   <div class="page-header d-flex flex-wrap align-items-center justify-content-between mb-4">
     <div class="header-title">
@@ -14,7 +14,7 @@
       </div>
 
       <!-- Add Button -->
-      <button class="btn btn-add-gametype" (click)="openFormModal()">
+      <button class="btn btn-add-custom" (click)="openFormModal()">
         <i class="fa-solid fa-plus me-2"></i> Add Game Type
       </button>
     </div>
@@ -37,12 +37,12 @@
         <tbody>
           @for (gameType of filteredGameTypes(); track gameType.game_type_id; let i = $index) {
           <tr>
-            <td class="gametype-id">{{ i + 1 }}</td>
+            <td class="item-id">{{ i + 1 }}</td>
             <td>
-              <span class="gametype-name">{{ gameType.game_type_name }}</span>
+              <span class="item-name">{{ gameType.game_type_name }}</span>
             </td>
             <td>
-              <span class="gametype-slug"><i class="fa-solid fa-link me-1"></i>{{ gameType.slug || 'no-slug' }}</span>
+              <span class="item-slug"><i class="fa-solid fa-link me-1"></i>{{ gameType.slug || 'no-slug' }}</span>
             </td>
             <td class="text-end">
               <div class="action-buttons d-inline-flex gap-2">
@@ -70,7 +70,7 @@
         type.' }}
       </p>
       @if (!searchQuery()) {
-      <button class="btn btn-add-gametype btn-sm mt-2" (click)="openFormModal()">
+      <button class="btn btn-add-custom btn-sm mt-2" (click)="openFormModal()">
         <i class="fa-solid fa-plus me-2"></i> Create Game Type
       </button>
       }

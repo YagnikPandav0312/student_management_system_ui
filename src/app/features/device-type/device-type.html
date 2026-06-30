@@ -1,4 +1,4 @@
-<div class="device-types-page">
+<div class="feature-page">
   <!-- Page Header -->
   <div class="page-header d-flex flex-wrap align-items-center justify-content-between mb-4">
     <div class="header-title">
@@ -14,7 +14,7 @@
       </div>
 
       <!-- Add Button -->
-      <button class="btn btn-add-devicetype" (click)="openFormModal()">
+      <button class="btn btn-add-custom" (click)="openFormModal()">
         <i class="fa-solid fa-plus me-2"></i> Add Device Type
       </button>
     </div>
@@ -37,12 +37,12 @@
         <tbody>
           @for (deviceType of filteredDeviceTypes(); track deviceType.device_type_id; let i = $index) {
           <tr>
-            <td class="devicetype-id">{{ i + 1 }}</td>
+            <td class="item-id">{{ i + 1 }}</td>
             <td>
-              <span class="devicetype-name">{{ deviceType.device_type_name }}</span>
+              <span class="item-name">{{ deviceType.device_type_name }}</span>
             </td>
             <td>
-              <span class="devicetype-slug"><i class="fa-solid fa-link me-1"></i>{{ deviceType.slug || 'no-slug' }}</span>
+              <span class="item-slug"><i class="fa-solid fa-link me-1"></i>{{ deviceType.slug || 'no-slug' }}</span>
             </td>
             <td class="text-end">
               <div class="action-buttons d-inline-flex gap-2">
@@ -70,7 +70,7 @@
         type.' }}
       </p>
       @if (!searchQuery()) {
-      <button class="btn btn-add-devicetype btn-sm mt-2" (click)="openFormModal()">
+      <button class="btn btn-add-custom btn-sm mt-2" (click)="openFormModal()">
         <i class="fa-solid fa-plus me-2"></i> Create Device Type
       </button>
       }

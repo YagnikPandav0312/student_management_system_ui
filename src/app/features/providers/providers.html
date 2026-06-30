@@ -1,4 +1,4 @@
-<div class="providers-page">
+<div class="feature-page">
   <!-- Page Header -->
   <div class="page-header d-flex flex-wrap align-items-center justify-content-between mb-4">
     <div class="header-title">
@@ -14,7 +14,7 @@
       </div>
 
       <!-- Add Button -->
-      <button class="btn btn-add-provider" (click)="openFormModal()">
+      <button class="btn btn-add-custom" (click)="openFormModal()">
         <i class="fa-solid fa-plus me-2"></i> Add Provider
       </button>
     </div>
@@ -37,7 +37,7 @@
         <tbody>
           @for ( provider of providers(); track provider.provider_id ; let i = $index) {
           <tr>
-            <td class="provider-id">{{ i + 1 }}</td>
+            <td class="item-id">{{ i + 1 }}</td>
             <td>
               <div class="logo-container">
                 @if (provider.logo) {
@@ -51,8 +51,8 @@
             </td>
             <td>
               <div class="d-flex flex-column">
-                <span class="provider-name">{{ provider.provider_name }}</span>
-                <span class="provider-slug"><i class="fa-solid fa-link me-1"></i>{{ provider.slug || 'no-slug' }}</span>
+                <span class="item-name">{{ provider.provider_name }}</span>
+                <span class="item-slug"><i class="fa-solid fa-link me-1"></i>{{ provider.slug || 'no-slug' }}</span>
               </div>
             </td>
             <td class="text-end">
@@ -80,7 +80,7 @@
         {{ searchQuery() ? 'No providers match your search query.' : 'Get started by creating your very first provider.'
         }}
       </p>
-      <button *ngIf="!searchQuery()" class="btn btn-add-provider btn-sm mt-2" (click)="openFormModal()">
+      <button *ngIf="!searchQuery()" class="btn btn-add-custom btn-sm mt-2" (click)="openFormModal()">
         <i class="fa-solid fa-plus me-2"></i> Create Provider
       </button>
     </div>
