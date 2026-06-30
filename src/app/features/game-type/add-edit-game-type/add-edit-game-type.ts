@@ -9,8 +9,8 @@ import { ToastrService } from 'ngx-toastr';
   selector: 'app-add-edit-gametype',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './add-edit-gametype.html',
-  styleUrl: './add-edit-gametype.scss',
+  templateUrl: './add-edit-game-type.html',
+  styleUrl: './add-edit-game-type.scss',
 })
 export class AddEditGametype implements OnInit {
   @Input() gameType: any = null;

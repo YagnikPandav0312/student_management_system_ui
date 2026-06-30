@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { GameTypeService } from '../../core/services/game-type';
 import { Common } from '../../core/services/common';
 import { ToastrService } from 'ngx-toastr';
-import { AddEditGametype } from './add-edit-gametype/add-edit-gametype';
+import { AddEditGametype } from './add-edit-game-type/add-edit-game-type';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

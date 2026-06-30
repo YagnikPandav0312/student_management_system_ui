@@ -12,5 +12,12 @@ export const API = {
         create_game_type: '/gametype/create_game_type',
         update_game_type: '/gametype/update_game_type',
         delete_game_type: '/gametype/delete_game_type',
+    },
+    device_type_api: {
+        get_device_type: '/devicetype/get_device_type',
+        get_device_type_by_id: '/devicetype/get_device_type_by_id',
+        create_device_type: '/devicetype/create_device_type',
+        update_device_type: '/devicetype/update_device_type',
+        delete_device_type: '/devicetype/delete_device_type',
     }
 }

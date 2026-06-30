@@ -1,0 +1,55 @@
+<div class="form-container">
+  <div class="form-header">
+    <h3>{{ isEditMode() ? 'Edit Device Type' : 'Add New Device Type' }}</h3>
+    <button type="button" class="btn-close-panel" (click)="onCancel()" aria-label="Close panel">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-body">
+    <div class="form-group mb-4">
+      <label for="device_type_name" class="form-label">Device Type Name <span class="required">*</span></label>
+      <div class="input-wrapper">
+        <i class="fa-solid fa-mobile-screen input-icon"></i>
+        <input type="text" id="device_type_name" formControlName="device_type_name" class="form-control"
+          placeholder="Enter device type name..." [class.is-invalid]="submitted() && f['device_type_name'].errors" />
+      </div>
+      @if (submitted() && f['device_type_name'].errors) {
+      <div class="error-feedback">
+        @if (f['device_type_name'].errors['required']) {
+        <span>Device type name is required.</span>
+        }
+        @if (f['device_type_name'].errors['maxlength']) {
+        <span>Device type name cannot exceed 100 characters.</span>
+        }
+      </div>
+      }
+    </div>
+
+    <div class="form-group mb-4">
+      <label for="slug" class="form-label">Slug URL <span class="required">*</span></label>
+      <div class="input-wrapper">
+        <i class="fa-solid fa-link input-icon"></i>
+        <input type="text" id="slug" formControlName="slug" class="form-control" placeholder="e.g. mobile-phone"
+          [class.is-invalid]="submitted() && f['slug'].errors" />
+      </div>
+      @if (submitted() && f['slug'].errors) {
+      <div class="error-feedback">
+        @if (f['slug'].errors['required']) {
+        <span>Slug is required.</span>
+        }
+        @if (f['slug'].errors['pattern']) {
+        <span>Slug must be lowercase alphanumeric and dashes only (e.g. mobile-phone).</span>
+        }
+      </div>
+      }
+    </div>
+
+    <div class="form-footer">
+      <button type="button" class="btn btn-secondary-custom" (click)="onCancel()">Cancel</button>
+      <button type="submit" class="btn btn-primary-custom">
+        <i class="fa-solid fa-check me-2"></i> {{ isEditMode() ? 'Update' : 'Save' }}
+      </button>
+    </div>
+  </form>
+</div>
