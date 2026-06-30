@@ -6,6 +6,7 @@ import { Common } from '../../core/services/common';
 import { ToastrService } from 'ngx-toastr';
 import { AddEditGametype } from './add-edit-game-type/add-edit-game-type';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Confirm } from '../../shared/component/confirm/confirm';
 
 @Component({
   selector: 'app-game-type',
@@ -73,23 +74,33 @@ export class GameType implements OnInit {
   }
 
   onDeleteGameType(gameType: any): void {
-    if (confirm(`Are you sure you want to delete "${gameType.game_type_name}"?`)) {
-      this.commonService.showSpinner();
-      this.gameTypeService.deleteGameType(gameType.game_type_id).subscribe({
-        next: (res) => {
-          this.commonService.hideSpinner();
-          if (res.success) {
-            this.toastr.success(res.message || 'Game type deleted successfully');
-            this.loadGameTypes();
-          } else {
-            this.toastr.error(res.message || 'Failed to delete game type');
-          }
-        },
-        error: (err) => {
-          this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'Error occurred while deleting game type');
-        },
-      });
-    }
+    const modalRef = this.modalService.open(Confirm, {
+      centered: true,
+      backdrop: 'static',
+      size: 'md',
+    });
+    modalRef.componentInstance.title = 'Delete Game Type';
+    modalRef.componentInstance.message = `Are you sure you want to delete "${gameType.game_type_name}"?`;
+    modalRef.componentInstance.onClose.subscribe((returnData: any) => {
+      if (returnData) {
+        this.commonService.showSpinner();
+        this.gameTypeService.deleteGameType(gameType.game_type_id).subscribe({
+          next: (res) => {
+            this.commonService.hideSpinner();
+            if (res.success) {
+              this.toastr.success(res.message || 'Game type deleted successfully');
+              this.loadGameTypes();
+            } else {
+              this.toastr.error(res.message || 'Failed to delete game type');
+            }
+          },
+          error: (err) => {
+            this.commonService.hideSpinner();
+            this.toastr.error(err.error?.message || 'Error occurred while deleting game type');
+          },
+        });
+      }
+      modalRef.close();
+    });
   }
 }

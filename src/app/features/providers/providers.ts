@@ -6,6 +6,7 @@ import { Common } from '../../core/services/common';
 import { ToastrService } from 'ngx-toastr';
 import { AddEditProviders } from './add-edit-providers/add-edit-providers';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Confirm } from '../../shared/component/confirm/confirm';
 
 @Component({
   selector: 'app-providers',
@@ -74,23 +75,33 @@ export class Providers implements OnInit {
   }
 
   onDeleteProvider(provider: any): void {
-    if (confirm(`Are you sure you want to delete "${provider.provider_name}"?`)) {
-      this.commonService.showSpinner();
-      this.providerService.deleteProvider(provider.provider_id).subscribe({
-        next: (res) => {
-          this.commonService.hideSpinner();
-          if (res.success) {
-            this.toastr.success(res.message || 'Provider deleted successfully');
-            this.loadProviders();
-          } else {
-            this.toastr.error(res.message || 'Failed to delete provider');
-          }
-        },
-        error: (err) => {
-          this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'Error occurred while deleting provider');
-        },
-      });
-    }
+    const modalRef = this.modalService.open(Confirm, {
+      centered: true,
+      backdrop: 'static',
+      size: 'md',
+    });
+    modalRef.componentInstance.title = 'Delete Provider';
+    modalRef.componentInstance.message = `Are you sure you want to delete "${provider.provider_name}"?`;
+    modalRef.componentInstance.onClose.subscribe((returnData: any) => {
+      if (returnData) {
+        this.commonService.showSpinner();
+        this.providerService.deleteProvider(provider.provider_id).subscribe({
+          next: (res) => {
+            this.commonService.hideSpinner();
+            if (res.success) {
+              this.toastr.success(res.message || 'Provider deleted successfully');
+              this.loadProviders();
+            } else {
+              this.toastr.error(res.message || 'Failed to delete provider');
+            }
+          },
+          error: (err) => {
+            this.commonService.hideSpinner();
+            this.toastr.error(err.error?.message || 'Error occurred while deleting provider');
+          },
+        });
+      }
+      modalRef.close();
+    });
   }
 }

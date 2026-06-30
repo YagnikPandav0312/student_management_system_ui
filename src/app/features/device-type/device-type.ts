@@ -6,6 +6,7 @@ import { Common } from '../../core/services/common';
 import { ToastrService } from 'ngx-toastr';
 import { AddEditDeviceType } from './add-edit-device-type/add-edit-device-type';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Confirm } from '../../shared/component/confirm/confirm';
 
 @Component({
   selector: 'app-device-type',
@@ -73,23 +74,33 @@ export class DeviceType implements OnInit {
   }
 
   onDeleteDeviceType(deviceType: any): void {
-    if (confirm(`Are you sure you want to delete "${deviceType.device_type_name}"?`)) {
-      this.commonService.showSpinner();
-      this.deviceTypeService.deleteDeviceType(deviceType.device_type_id).subscribe({
-        next: (res) => {
-          this.commonService.hideSpinner();
-          if (res.success) {
-            this.toastr.success(res.message || 'Device type deleted successfully');
-            this.loadDeviceTypes();
-          } else {
-            this.toastr.error(res.message || 'Failed to delete device type');
-          }
-        },
-        error: (err) => {
-          this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'Error occurred while deleting device type');
-        },
-      });
-    }
+    const modalRef = this.modalService.open(Confirm, {
+      centered: true,
+      backdrop: 'static',
+      size: 'md',
+    });
+    modalRef.componentInstance.title = 'Delete Device Type';
+    modalRef.componentInstance.message = `Are you sure you want to delete "${deviceType.device_type_name}"?`;
+    modalRef.componentInstance.onClose.subscribe((returnData: any) => {
+      if (returnData) {
+        this.commonService.showSpinner();
+        this.deviceTypeService.deleteDeviceType(deviceType.device_type_id).subscribe({
+          next: (res) => {
+            this.commonService.hideSpinner();
+            if (res.success) {
+              this.toastr.success(res.message || 'Device type deleted successfully');
+              this.loadDeviceTypes();
+            } else {
+              this.toastr.error(res.message || 'Failed to delete device type');
+            }
+          },
+          error: (err) => {
+            this.commonService.hideSpinner();
+            this.toastr.error(err.error?.message || 'Error occurred while deleting device type');
+          },
+        });
+      }
+      modalRef.close();
+    });
   }
 }
