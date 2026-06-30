@@ -30,8 +30,18 @@
         <label>Password</label>
         <div class="input-box mb-3">
           <i class="fa-solid fa-lock"></i>
-          <input type="password" formControlName="password" placeholder="Enter password" />
-          <i class="fa-solid fa-eye"></i>
+          <input
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Enter password"
+          />
+          <i
+            class="fa-solid"
+            [class.fa-eye]="!showPassword()"
+            [class.fa-eye-slash]="showPassword()"
+            (click)="togglePassword()"
+            style="cursor: pointer"
+          ></i>
         </div>
         @if (f['password'].touched && f['password'].errors) {
           <div class="text-danger mt-1">

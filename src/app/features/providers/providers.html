@@ -1,0 +1,89 @@
+<div class="providers-page">
+  <!-- Page Header -->
+  <div class="page-header d-flex flex-wrap align-items-center justify-content-between mb-4">
+    <div class="header-title">
+      <h2>Game Providers</h2>
+      <p class="text-muted">Manage your catalog game providers and upload their logos</p>
+    </div>
+
+    <div class="header-actions d-flex align-items-center gap-3">
+      <!-- Search Input -->
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" class="form-control" placeholder="Search providers..." [(ngModel)]="searchQuery" />
+      </div>
+
+      <!-- Add Button -->
+      <button class="btn btn-add-provider" (click)="openFormModal()">
+        <i class="fa-solid fa-plus me-2"></i> Add Provider
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Card -->
+  <div class="content-card">
+    <!-- Table View -->
+    @if (providers().length > 0) {
+    <div class="table-responsive">
+      <table class="table custom-table align-middle">
+        <thead>
+          <tr>
+            <th scope="col" style="width: 100px;">ID</th>
+            <th scope="col" style="width: 120px;">Logo</th>
+            <th scope="col">Provider Name</th>
+            <th scope="col" class="text-end" style="width: 150px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for ( provider of providers(); track provider.provider_id ; let i = $index) {
+          <tr>
+            <td class="provider-id">{{ i + 1 }}</td>
+            <td>
+              <div class="logo-container">
+                @if (provider.logo) {
+                <img [src]="getLogoUrl(provider.logo)" alt="{{ provider.provider_name }} logo" class="provider-logo" />
+                } @else {
+                <div class="default-logo-avatar">
+                  {{ provider.provider_name.charAt(0).toUpperCase() }}
+                </div>
+                }
+              </div>
+            </td>
+            <td>
+              <div class="d-flex flex-column">
+                <span class="provider-name">{{ provider.provider_name }}</span>
+                <span class="provider-slug"><i class="fa-solid fa-link me-1"></i>{{ provider.slug || 'no-slug' }}</span>
+              </div>
+            </td>
+            <td class="text-end">
+              <div class="action-buttons d-inline-flex gap-2">
+                <button class="btn btn-action btn-edit" (click)="openFormModal(provider)" title="Edit Provider">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button class="btn btn-action btn-delete" (click)="onDeleteProvider(provider)" title="Delete Provider">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    } @else {
+    <div class="empty-state-container text-center py-5">
+      <div class="empty-state-icon mb-3">
+        <i class="fa-solid fa-folder-open"></i>
+      </div>
+      <h4>No Providers Found</h4>
+      <p class="text-muted">
+        {{ searchQuery() ? 'No providers match your search query.' : 'Get started by creating your very first provider.'
+        }}
+      </p>
+      <button *ngIf="!searchQuery()" class="btn btn-add-provider btn-sm mt-2" (click)="openFormModal()">
+        <i class="fa-solid fa-plus me-2"></i> Create Provider
+      </button>
+    </div>
+    }
+  </div>
+</div>

@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "student-management": {
+    "game-catalog": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -39,7 +39,9 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": [
+              "src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
@@ -69,10 +71,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "student-management:build:production"
+              "buildTarget": "game-catalog:build:production"
             },
             "development": {
-              "buildTarget": "student-management:build:development"
+              "buildTarget": "game-catalog:build:development"
             }
           },
           "defaultConfiguration": "development"

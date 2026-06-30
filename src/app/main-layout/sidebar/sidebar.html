@@ -1,67 +1,43 @@
 <nav class="sidebar">
-  <div class="logo">🎓 <span>SMS</span></div>
+  <div class="logo">
+    <i class="fa-solid fa-graduation-cap logo-icon"></i>
+    <span class="logo-text">Game Catalog</span>
+  </div>
 
-  <ul>
-    <li>
-      <a routerLink="/dashboard"> 🏠 Dashboard </a>
-    </li>
+  <div class="menu-section">
+    <span class="menu-title">Main Navigation</span>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-link">
+          <i class="fa-solid fa-chart-pie nav-icon"></i>
+          <span class="nav-text">Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/providers" routerLinkActive="active" class="nav-link">
+          <i class="fa-solid fa-building-user nav-icon"></i>
+          <span class="nav-text">Game Providers</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/game-type" routerLinkActive="active" class="nav-link">
+          <i class="fa-solid fa-building-user nav-icon"></i>
+          <span class="nav-text">Game Type</span>
+        </a>
+      </li>
+    </ul>
+  </div>
 
-    <li class="menu-title">Student Management</li>
-
-    <li>
-      <a routerLink="/students"> 👨‍🎓 Students </a>
-    </li>
-
-    <li>
-      <a routerLink="/guardians"> 👪 Guardians </a>
-    </li>
-
-    <li class="menu-title">Teacher Management</li>
-
-    <li>
-      <a routerLink="/teachers"> 👨‍🏫 Teachers </a>
-    </li>
-
-    <li>
-      <a routerLink="/departments"> 🏢 Departments </a>
-    </li>
-
-    <li class="menu-title">Academic</li>
-
-    <li>
-      <a routerLink="/classes"> 🏫 Classes </a>
-    </li>
-
-    <li>
-      <a routerLink="/subjects"> 📚 Subjects </a>
-    </li>
-
-    <li class="menu-title">Examination</li>
-
-    <li>
-      <a routerLink="/attendance"> 📝 Attendance </a>
-    </li>
-
-    <li>
-      <a routerLink="/exams"> 📄 Exams </a>
-    </li>
-
-    <li>
-      <a routerLink="/results"> 📊 Results </a>
-    </li>
-
-    <li class="menu-title">Finance</li>
-
-    <li>
-      <a routerLink="/fees"> 💰 Fees </a>
-    </li>
-
-    <li>
-      <a routerLink="/settings"> ⚙️ Settings </a>
-    </li>
-
-    <li>
-      <a routerLink="/logout"> 🚪 Logout </a>
-    </li>
-  </ul>
+  <div class="menu-section footer-section">
+    <span class="menu-title">Account</span>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <button (click)="logOut()" class="nav-link btn-logout">
+          <i class="fa-solid fa-right-from-bracket nav-icon"></i>
+          <span class="nav-text">Logout</span>
+        </button>
+      </li>
+    </ul>
+  </div>
 </nav>

@@ -16,6 +16,8 @@ import { loginResponse } from '../../../model/account.model';
 export class Login {
   loginForm!: FormGroup;
   submitted = signal<boolean>(false);
+  showPassword = signal<boolean>(false);
+
   public commonService = inject(Common);
   private toastr = inject(ToastrService);
 
@@ -23,7 +25,7 @@ export class Login {
     private fb: FormBuilder,
     private authService: Auth,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -36,6 +38,10 @@ export class Login {
     return this.loginForm.controls;
   }
 
+  togglePassword() {
+    this.showPassword.set(!this.showPassword());
+  }
+
   onSubmit() {
     this.submitted.set(true);
     if (this.loginForm.invalid) {
@@ -46,10 +52,10 @@ export class Login {
     this.authService.login(this.loginForm.value).subscribe({
       next: (res: BaseResponse<loginResponse>) => {
         if (res && res.status.code === 0) {
-          localStorage.setItem('token', res.data.token);
-          localStorage.setItem('role_id', res.data.role_id.toString());
-          localStorage.setItem('user', JSON.stringify(res.data));
-          this.redirectUser(res.data.role_id);
+          // localStorage.setItem('token', res.data.token);
+          // localStorage.setItem('role_id', res.data.role_id.toString());
+          // localStorage.setItem('user', JSON.stringify(res.data));
+          this.router.navigate(['/dashboard']);
           this.submitted.set(false);
           this.commonService.hideSpinner();
           this.commonService.manageStatus(res.status);

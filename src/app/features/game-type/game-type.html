@@ -1,0 +1,80 @@
+<div class="game-types-page">
+  <!-- Page Header -->
+  <div class="page-header d-flex flex-wrap align-items-center justify-content-between mb-4">
+    <div class="header-title">
+      <h2>Game Types</h2>
+      <p class="text-muted">Manage the catalog of game types and categories</p>
+    </div>
+
+    <div class="header-actions d-flex align-items-center gap-3">
+      <!-- Search Input -->
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" class="form-control" placeholder="Search game types..." [(ngModel)]="searchQuery" />
+      </div>
+
+      <!-- Add Button -->
+      <button class="btn btn-add-gametype" (click)="openFormModal()">
+        <i class="fa-solid fa-plus me-2"></i> Add Game Type
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Card -->
+  <div class="content-card">
+    <!-- Table View -->
+    @if (filteredGameTypes().length > 0) {
+    <div class="table-responsive">
+      <table class="table custom-table align-middle">
+        <thead>
+          <tr>
+            <th scope="col" style="width: 100px;">ID</th>
+            <th scope="col">Game Type Name</th>
+            <th scope="col">Slug</th>
+            <th scope="col" class="text-end" style="width: 150px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (gameType of filteredGameTypes(); track gameType.game_type_id; let i = $index) {
+          <tr>
+            <td class="gametype-id">{{ i + 1 }}</td>
+            <td>
+              <span class="gametype-name">{{ gameType.game_type_name }}</span>
+            </td>
+            <td>
+              <span class="gametype-slug"><i class="fa-solid fa-link me-1"></i>{{ gameType.slug || 'no-slug' }}</span>
+            </td>
+            <td class="text-end">
+              <div class="action-buttons d-inline-flex gap-2">
+                <button class="btn btn-action btn-edit" (click)="openFormModal(gameType)" title="Edit Game Type">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button class="btn btn-action btn-delete" (click)="onDeleteGameType(gameType)" title="Delete Game Type">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    } @else {
+    <div class="empty-state-container text-center py-5">
+      <div class="empty-state-icon mb-3">
+        <i class="fa-solid fa-folder-open"></i>
+      </div>
+      <h4>No Game Types Found</h4>
+      <p class="text-muted">
+        {{ searchQuery() ? 'No game types match your search query.' : 'Get started by creating your very first game
+        type.' }}
+      </p>
+      @if (!searchQuery()) {
+      <button class="btn btn-add-gametype btn-sm mt-2" (click)="openFormModal()">
+        <i class="fa-solid fa-plus me-2"></i> Create Game Type
+      </button>
+      }
+    </div>
+    }
+  </div>
+</div>

@@ -9,5 +9,5 @@ import { NgxSpinnerModule } from 'ngx-spinner';
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('student-management');
+  protected readonly title = signal('game-catalog');
 }

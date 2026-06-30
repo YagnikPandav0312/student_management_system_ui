@@ -1,17 +1,16 @@
 import { Routes } from '@angular/router';
 import { MainLayout } from './main-layout/main-layout';
-import { roleGuard } from './core/guard/role-guard';
 
 export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full',
-  },
-  {
-    path: 'login',
-    loadComponent: () => import('./features/auth/login/login').then((m) => m.Login),
-  },
+  // {
+  //   path: '',
+  //   redirectTo: 'login',
+  //   pathMatch: 'full',
+  // },
+  // {
+  //   path: 'login',
+  //   loadComponent: () => import('./features/auth/login/login').then((m) => m.Login),
+  // },
   {
     path: '',
     component: MainLayout,
@@ -22,26 +21,18 @@ export const routes: Routes = [
         pathMatch: 'full',
       },
       {
-        path: 'admin/dashboard',
+        path: 'dashboard',
         loadComponent: () =>
-          import('./features/admin-dashboard/admin-dashboard').then((m) => m.AdminDashboard),
-        canActivate: [roleGuard],
-        data: { role: 1 },
+          import('./features/dashboard/dashboard').then((m) => m.Dashboard),
       },
       {
-        path: 'teacher/dashboard',
-        loadComponent: () =>
-          import('./features/teacher-dashboard/teacher-dashboard').then((m) => m.TeacherDashboard),
-        canActivate: [roleGuard],
-        data: { role: 2 },
+        path: 'providers',
+        loadComponent: () => import('./features/providers/providers').then((m) => m.Providers),
       },
       {
-        path: 'student/dashboard',
-        loadComponent: () =>
-          import('./features/student-dashboard/student-dashboard').then((m) => m.StudentDashboard),
-        canActivate: [roleGuard],
-        data: { role: 3 },
-      },
+        path: 'game-type',
+        loadComponent: () => import('./features/game-type/game-type').then((m) => m.GameType)
+      }
     ],
   },
 ];
