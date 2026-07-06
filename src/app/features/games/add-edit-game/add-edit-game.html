@@ -49,7 +49,7 @@
       </div>
 
       <!-- Provider -->
-      <div class="col-md-4">
+      <div class="col-lg-4 col-md-6">
         <label for="provider_id" class="form-label">Provider <span class="required">*</span></label>
         <select id="provider_id" class="form-select" formControlName="provider_id"
           [class.is-invalid]="submitted() && f['provider_id'].errors">
@@ -66,7 +66,7 @@
       </div>
 
       <!-- Category -->
-      <div class="col-md-4">
+      <div class="col-lg-4 col-md-6">
         <label for="category_id" class="form-label">Category <span class="required">*</span></label>
         <select id="category_id" class="form-select" formControlName="category_id"
           [class.is-invalid]="submitted() && f['category_id'].errors">
@@ -83,7 +83,7 @@
       </div>
 
       <!-- Game Type -->
-      <div class="col-md-4">
+      <div class="col-lg-4 col-md-6">
         <label for="game_type_id" class="form-label">Game Type <span class="required">*</span></label>
         <select id="game_type_id" class="form-select" formControlName="game_type_id"
           [class.is-invalid]="submitted() && f['game_type_id'].errors">
@@ -100,7 +100,7 @@
       </div>
 
       <!-- Device Type -->
-      <div class="col-md-4">
+      <div class="col-lg-4 col-md-6">
         <label for="device_type_id" class="form-label">Device Type <span class="required">*</span></label>
         <select id="device_type_id" class="form-select" formControlName="device_type_id"
           [class.is-invalid]="submitted() && f['device_type_id'].errors">
@@ -117,13 +117,13 @@
       </div>
 
       <!-- Release Date -->
-      <div class="col-md-4">
+      <div class="col-lg-4 col-md-6">
         <label for="release_date" class="form-label">Release Date</label>
         <input type="date" id="release_date" class="form-control" formControlName="release_date" />
       </div>
 
       <!-- Max Win -->
-      <div class="col-md-4">
+      <div class="col-lg-4 col-md-6">
         <label for="max_win" class="form-label">Max Win</label>
         <input type="text" id="max_win" class="form-control" formControlName="max_win" placeholder="e.g. 5000x"
           [class.is-invalid]="submitted() && f['max_win'].errors" />
@@ -135,7 +135,7 @@
       </div>
 
       <!-- RTP -->
-      <div class="col-md-4">
+      <div class="col-lg-4 col-md-6">
         <label for="rtp" class="form-label">RTP (%)</label>
         <input type="number" step="0.01" id="rtp" class="form-control" formControlName="rtp" placeholder="e.g. 96.51"
           [class.is-invalid]="submitted() && f['rtp'].errors" />
@@ -147,7 +147,7 @@
       </div>
 
       <!-- Min Bet -->
-      <div class="col-md-4">
+      <div class="col-lg-4 col-md-6">
         <label for="min_bet" class="form-label">Min Bet ($)</label>
         <input type="number" step="0.01" id="min_bet" class="form-control" formControlName="min_bet" placeholder="0.20"
           [class.is-invalid]="submitted() && f['min_bet'].errors" />
@@ -159,7 +159,7 @@
       </div>
 
       <!-- Max Bet -->
-      <div class="col-md-4">
+      <div class="col-lg-4 col-md-6">
         <label for="max_bet" class="form-label">Max Bet ($)</label>
         <input type="number" step="0.01" id="max_bet" class="form-control" formControlName="max_bet" placeholder="100.00"
           [class.is-invalid]="submitted() && f['max_bet'].errors" />
@@ -171,7 +171,7 @@
       </div>
 
       <!-- Variance -->
-      <div class="col-md-4">
+      <div class="col-lg-4 col-md-6">
         <label for="variance" class="form-label">Variance</label>
         <select id="variance" class="form-select" formControlName="variance">
           <option value="">Select Variance (Optional)</option>

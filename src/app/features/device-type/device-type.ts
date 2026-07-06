@@ -7,6 +7,8 @@ import { ToastrService } from 'ngx-toastr';
 import { AddEditDeviceType } from './add-edit-device-type/add-edit-device-type';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Confirm } from '../../shared/component/confirm/confirm';
+import { BaseResponse } from '../../model/api.model';
+import { DeviceTypeList } from '../../model/device-type.model';
 
 @Component({
   selector: 'app-device-type',
@@ -16,7 +18,7 @@ import { Confirm } from '../../shared/component/confirm/confirm';
   styleUrl: './device-type.scss',
 })
 export class DeviceType implements OnInit {
-  deviceTypes = signal<any[]>([]);
+  deviceTypes = signal<DeviceTypeList[]>([]);
   searchQuery = signal<string>('');
 
   private deviceTypeService = inject(DeviceTypeService);
@@ -24,26 +26,24 @@ export class DeviceType implements OnInit {
   private toastr = inject(ToastrService);
   private modalService = inject(NgbModal);
 
-  filteredDeviceTypes = computed(() => {
-    return this.deviceTypes();
-  });
-
   ngOnInit(): void {
-    this.loadDeviceTypes();
+    this.getDesviceTypeList();
   }
 
-  loadDeviceTypes(): void {
+  getDesviceTypeList(): void {
     this.commonService.showSpinner();
     this.deviceTypeService.getDeviceTypes().subscribe({
-      next: (res) => {
+      next: (res: BaseResponse<DeviceTypeList[]>) => {
         this.commonService.hideSpinner();
-        if (res.success) {
+        if (res.status.code === 0) {
           this.deviceTypes.set(res.data || []);
+          this.commonService.hideSpinner();
         } else {
-          this.toastr.error(res.message || 'Failed to fetch device types');
+          this.commonService.manageStatus(res.status);
+          this.commonService.hideSpinner();
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         this.commonService.hideSpinner();
         this.toastr.error(err.error?.message || 'Error occurred while loading device types');
       },
@@ -59,7 +59,7 @@ export class DeviceType implements OnInit {
     modalRef.componentInstance.deviceType = item;
     modalRef.componentInstance.close.subscribe((isSaved?: boolean) => {
       if (isSaved) {
-        this.loadDeviceTypes();
+        this.getDesviceTypeList();
       }
       modalRef.close();
     });
@@ -77,13 +77,15 @@ export class DeviceType implements OnInit {
       if (returnData) {
         this.commonService.showSpinner();
         this.deviceTypeService.deleteDeviceType(deviceType.device_type_id).subscribe({
-          next: (res) => {
+          next: (res: BaseResponse<any>) => {
             this.commonService.hideSpinner();
-            if (res.success) {
-              this.toastr.success(res.message || 'Device type deleted successfully');
-              this.loadDeviceTypes();
+            if (res.status.code === 0) {
+              this.getDesviceTypeList();
+              this.commonService.manageStatus(res.status);
+              this.commonService.hideSpinner();
             } else {
-              this.toastr.error(res.message || 'Failed to delete device type');
+              this.commonService.manageStatus(res.status);
+              this.commonService.hideSpinner();
             }
           },
           error: (err) => {

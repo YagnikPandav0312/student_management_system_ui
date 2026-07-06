@@ -7,14 +7,45 @@
   align-items: center;
   color: #64748b;
   font-size: 14px;
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+    gap: 8px;
+    padding: 15px;
+    text-align: center;
+  }
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .footer a {
   text-decoration: none;
-  color: #2563eb;
-  margin-left: 15px;
+  color: #64748b;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #4f46e5;
+    text-decoration: underline;
+  }
 }
 
-.footer a:hover {
-  text-decoration: underline;
+.separator {
+  color: #cbd5e1;
+  user-select: none;
+
+  @media (max-width: 480px) {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-links {
+    gap: 12px;
+  }
 }

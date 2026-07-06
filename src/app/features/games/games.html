@@ -28,23 +28,23 @@
       <table class="table custom-table align-middle">
         <thead>
           <tr>
-            <th scope="col" style="width: 80px;">ID</th>
+            <th scope="col" class="d-none d-md-table-cell" style="width: 80px;">ID</th>
             <th scope="col" style="width: 70px;">Logo</th>
             <th scope="col">Game Name</th>
             <th scope="col">Provider</th>
-            <th scope="col">Category</th>
-            <th scope="col">Game Type</th>
-            <th scope="col">Device Type</th>
-            <th scope="col">RTP & Variance</th>
-            <th scope="col">Min/Max Bet</th>
-            <th scope="col">Max Win</th>
+            <th scope="col" class="d-none d-sm-table-cell">Category</th>
+            <th scope="col" class="d-none d-md-table-cell">Game Type</th>
+            <th scope="col" class="d-none d-md-table-cell">Device Type</th>
+            <th scope="col" class="d-none d-lg-table-cell">RTP & Variance</th>
+            <th scope="col" class="d-none d-lg-table-cell">Min/Max Bet</th>
+            <th scope="col" class="d-none d-lg-table-cell">Max Win</th>
             <th scope="col" class="text-end" style="width: 130px;">Actions</th>
           </tr>
         </thead>
         <tbody>
           @for (game of filteredGames(); track game.game_id; let i = $index) {
           <tr>
-            <td class="item-id">{{ i + 1 }}</td>
+            <td class="item-id d-none d-md-table-cell">{{ i + 1 }}</td>
             <td>
               <div class="game-thumbnail-wrapper">
                 @if (game.thumbnail) {
@@ -65,29 +65,29 @@
             <td>
               <span class="badge badge-provider">{{ getProviderName(game.provider_id) }}</span>
             </td>
-            <td>
+            <td class="d-none d-sm-table-cell">
               <span class="badge badge-category">{{ getCategoryName(game.category_id) }}</span>
             </td>
-            <td>
+            <td class="d-none d-md-table-cell">
               <span class="badge badge-type">{{ getGameTypeName(game.game_type_id) }}</span>
             </td>
-            <td>
+            <td class="d-none d-md-table-cell">
               <span class="badge badge-device">{{ getDeviceTypeName(game.device_type_id) }}</span>
             </td>
-            <td>
+            <td class="d-none d-lg-table-cell">
               <div class="rtp-variance-wrapper">
                 <span class="rtp-text">RTP: {{ game.rtp ? (game.rtp + '%') : '-' }}</span>
                 <span class="variance-text text-muted">{{ game.variance || '-' }}</span>
               </div>
             </td>
-            <td>
+            <td class="d-none d-lg-table-cell">
               <div class="bet-range">
                 <span>{{ game.min_bet ? ('$' + game.min_bet) : '-' }}</span>
                 <span class="text-muted mx-1">/</span>
                 <span>{{ game.max_bet ? ('$' + game.max_bet) : '-' }}</span>
               </div>
             </td>
-            <td>
+            <td class="d-none d-lg-table-cell">
               <span class="max-win-text text-success font-weight-bold">{{ game.max_win || '-' }}</span>
             </td>
             <td class="text-end">

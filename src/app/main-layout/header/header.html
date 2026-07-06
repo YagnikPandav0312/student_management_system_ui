@@ -1,7 +1,18 @@
 <header class="header">
-  <h2>Game Catalog</h2>
+  <div class="header-left d-flex align-items-center">
+    <button type="button" class="btn border-0 p-0 me-3 text-secondary d-flex align-items-center justify-content-center" (click)="commonService.toggleSidebar()" aria-label="Toggle menu">
+      <i class="fa-solid fa-bars fs-4"></i>
+    </button>
+    <h2 class="m-0">Game Catalog</h2>
+  </div>
   <div class="header-right">
-    <button type="button" class="btn btn-outline-info">🔔</button>
-    <div class="profile" (click)="logOut()">👤 Admin</div>
+    <button type="button" class="btn btn-bell" aria-label="Notifications">
+      <i class="fa-regular fa-bell"></i>
+      <span class="notification-badge"></span>
+    </button>
+    <div class="profile-badge" (click)="logOut()">
+      <div class="profile-avatar">A</div>
+      <span class="profile-name">Admin</span>
+    </div>
   </div>
 </header>

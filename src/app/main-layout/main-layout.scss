@@ -2,6 +2,7 @@
   display: flex;
   min-height: 100vh;
   background: #f8fafc;
+  position: relative;
 }
 
 .main-content {
@@ -9,6 +10,8 @@
   width: calc(100% - 270px);
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  transition: all 0.3s ease;
 }
 
 .page-content {
@@ -17,9 +20,28 @@
   overflow-y: auto;
 }
 
-@media (max-width: 768px) {
+/* Mobile Sidebar Overlay */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 99;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@media (max-width: 992px) {
   .main-content {
-    margin-left: 240px;
-    width: calc(100% - 240px);
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .page-content {
+    padding: 15px;
   }
 }

@@ -1,4 +1,9 @@
-<div class="layout">
+<div class="layout" [class.sidebar-open]="common.isSidebarOpen()">
+  <!-- Mobile Sidebar Overlay -->
+  @if (common.isSidebarOpen()) {
+    <div class="sidebar-overlay d-lg-none" (click)="common.closeSidebar()"></div>
+  }
+
   <app-sidebar></app-sidebar>
   <div class="main-content">
     <app-header></app-header>

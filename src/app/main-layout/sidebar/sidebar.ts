@@ -3,6 +3,7 @@ import { Router, RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Confirm } from '../../shared/component/confirm/confirm';
 import { ToastrService } from 'ngx-toastr';
+import { Common } from '../../core/services/common';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,6 +16,7 @@ export class Sidebar {
   private modalService = inject(NgbModal);
   private router = inject(Router);
   private toastr = inject(ToastrService);
+  common = inject(Common);
 
   logOut() {
     const modalRef = this.modalService.open(Confirm, {
@@ -32,6 +34,7 @@ export class Sidebar {
         localStorage.removeItem('user');
         localStorage.clear();
         this.toastr.success('User logout successfully !');
+        this.common.closeSidebar();
       }
       modalRef.close();
     });

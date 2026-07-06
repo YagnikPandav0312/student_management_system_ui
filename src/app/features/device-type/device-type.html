@@ -10,7 +10,12 @@
       <!-- Search Input -->
       <div class="search-box">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" class="form-control" placeholder="Search device types..." [(ngModel)]="searchQuery" />
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search device types..."
+          [(ngModel)]="searchQuery"
+        />
       </div>
 
       <!-- Add Button -->
@@ -23,58 +28,72 @@
   <!-- Content Card -->
   <div class="content-card">
     <!-- Table View -->
-    @if (filteredDeviceTypes().length > 0) {
-    <div class="table-responsive">
-      <table class="table custom-table align-middle">
-        <thead>
-          <tr>
-            <th scope="col" style="width: 100px;">ID</th>
-            <th scope="col">Device Type Name</th>
-            <th scope="col">Slug</th>
-            <th scope="col" class="text-end" style="width: 150px;">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (deviceType of filteredDeviceTypes(); track deviceType.device_type_id; let i = $index) {
-          <tr>
-            <td class="item-id">{{ i + 1 }}</td>
-            <td>
-              <span class="item-name">{{ deviceType.device_type_name }}</span>
-            </td>
-            <td>
-              <span class="item-slug"><i class="fa-solid fa-link me-1"></i>{{ deviceType.slug || 'no-slug' }}</span>
-            </td>
-            <td class="text-end">
-              <div class="action-buttons d-inline-flex gap-2">
-                <button class="btn btn-action btn-edit" (click)="openFormModal(deviceType)" title="Edit Device Type">
-                  <i class="fa-solid fa-pen-to-square"></i>
-                </button>
-                <button class="btn btn-action btn-delete" (click)="onDeleteDeviceType(deviceType)" title="Delete Device Type">
-                  <i class="fa-solid fa-trash-can"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-    } @else {
-    <div class="empty-state-container text-center py-5">
-      <div class="empty-state-icon mb-3">
-        <i class="fa-solid fa-folder-open"></i>
+    @if (deviceTypes().length > 0) {
+      <div class="table-responsive">
+        <table class="table custom-table align-middle">
+          <thead>
+            <tr>
+              <th scope="col" class="d-none d-sm-table-cell" style="width: 100px">ID</th>
+              <th scope="col">Device Type Name</th>
+              <th scope="col" class="d-none d-sm-table-cell">Slug</th>
+              <th scope="col" class="text-end" style="width: 150px">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (deviceType of deviceTypes(); track deviceType.device_type_id; let i = $index) {
+              <tr>
+                <td class="item-id d-none d-sm-table-cell">{{ i + 1 }}</td>
+                <td>
+                  <span class="item-name">{{ deviceType.device_type_name }}</span>
+                </td>
+                <td class="d-none d-sm-table-cell">
+                  <span class="item-slug"
+                    ><i class="fa-solid fa-link me-1"></i>{{ deviceType.slug || 'no-slug' }}</span
+                  >
+                </td>
+                <td class="text-end">
+                  <div class="action-buttons d-inline-flex gap-2">
+                    <button
+                      class="btn btn-action btn-edit"
+                      (click)="openFormModal(deviceType)"
+                      title="Edit Device Type"
+                    >
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                    <button
+                      class="btn btn-action btn-delete"
+                      (click)="onDeleteDeviceType(deviceType)"
+                      title="Delete Device Type"
+                    >
+                      <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
-      <h4>No Device Types Found</h4>
-      <p class="text-muted">
-        {{ searchQuery() ? 'No device types match your search query.' : 'Get started by creating your very first device
-        type.' }}
-      </p>
-      @if (!searchQuery()) {
-      <button class="btn btn-add-custom btn-sm mt-2" (click)="openFormModal()">
-        <i class="fa-solid fa-plus me-2"></i> Create Device Type
-      </button>
-      }
-    </div>
+    } @else {
+      <div class="empty-state-container text-center py-5">
+        <div class="empty-state-icon mb-3">
+          <i class="fa-solid fa-folder-open"></i>
+        </div>
+        <h4>No Device Types Found</h4>
+        <p class="text-muted">
+          {{
+            searchQuery()
+              ? 'No device types match your search query.'
+              : 'Get started by creating your very first device
+        type.'
+          }}
+        </p>
+        @if (!searchQuery()) {
+          <button class="btn btn-add-custom btn-sm mt-2" (click)="openFormModal()">
+            <i class="fa-solid fa-plus me-2"></i> Create Device Type
+          </button>
+        }
+      </div>
     }
   </div>
 </div>

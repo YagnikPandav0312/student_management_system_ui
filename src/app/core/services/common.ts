@@ -1,7 +1,8 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Status } from '../../model/api.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,20 @@ import { Status } from '../../model/api.model';
 export class Common {
   public spinnerService = inject(NgxSpinnerService);
   private toastr = inject(ToastrService);
+  public http: HttpClient;
+  public isSidebarOpen = signal<boolean>(
+    typeof window !== 'undefined' ? window.innerWidth > 992 : true,
+  );
+
+  toggleSidebar(): void {
+    this.isSidebarOpen.update((open) => !open);
+  }
+
+  closeSidebar(): void {
+    if (typeof window !== 'undefined' && window.innerWidth <= 992) {
+      this.isSidebarOpen.set(false);
+    }
+  }
 
   showSpinner(): void {
     this.spinnerService.show();

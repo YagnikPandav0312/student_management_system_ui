@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { DeviceTypeService } from '../../../core/services/device-type';
 import { Common } from '../../../core/services/common';
 import { ToastrService } from 'ngx-toastr';
+import { BaseResponse } from '../../../model/api.model';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { DeviceTypeList } from '../../../model/device-type.model';
 
 @Component({
   selector: 'app-add-edit-device-type',
@@ -15,11 +18,10 @@ import { ToastrService } from 'ngx-toastr';
 export class AddEditDeviceType implements OnInit {
   @Input() deviceType: any = null;
   @Output() close = new EventEmitter<boolean>();
-
   form!: FormGroup;
   submitted = signal<boolean>(false);
   isEditMode = signal<boolean>(false);
-
+  modelService = inject(NgbActiveModal);
   private fb = inject(FormBuilder);
   private deviceTypeService = inject(DeviceTypeService);
   private commonService = inject(Common);
@@ -44,9 +46,7 @@ export class AddEditDeviceType implements OnInit {
       slug: ['', [Validators.required, Validators.pattern(/^[a-z0-9-]+$/)]],
     });
     this.submitted.set(false);
-
-    // Auto-generate slug from name if not in edit mode
-    this.form.get('device_type_name')?.valueChanges.subscribe(name => {
+    this.form.get('device_type_name')?.valueChanges.subscribe((name) => {
       if (!this.isEditMode() && name) {
         const slug = this.slugify(name);
         this.form.get('slug')?.setValue(slug, { emitEvent: false });
@@ -59,11 +59,11 @@ export class AddEditDeviceType implements OnInit {
       .toString()
       .toLowerCase()
       .trim()
-      .replace(/\s+/g, '-')           // Replace spaces with -
-      .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
-      .replace(/\-\-+/g, '-')         // Replace multiple - with single -
-      .replace(/^-+/, '')             // Trim - from start
-      .replace(/-+$/, '');            // Trim - from end
+      .replace(/\s+/g, '-') // Replace spaces with -
+      .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+      .replace(/\-\-+/g, '-') // Replace multiple - with single -
+      .replace(/^-+/, '') // Trim - from start
+      .replace(/-+$/, ''); // Trim - from end
   }
 
   get f() {
@@ -82,16 +82,19 @@ export class AddEditDeviceType implements OnInit {
       slug: this.form.get('slug')?.value,
     };
 
-    this.commonService.showSpinner();
     if (this.isEditMode()) {
+      this.commonService.showSpinner();
       this.deviceTypeService.updateDeviceType(this.deviceType.device_type_id, payload).subscribe({
-        next: (res) => {
+        next: (res: BaseResponse<DeviceTypeList>) => {
           this.commonService.hideSpinner();
-          if (res.success) {
-            this.toastr.success(res.message || 'Device type updated successfully');
+          if (res && res.status.code === 0) {
             this.close.emit(true);
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
           } else {
-            this.toastr.error(res.message || 'Failed to update device type');
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
+            this.toastr.error(res.status.message || 'Failed to update device type');
           }
         },
         error: (err) => {
@@ -101,13 +104,15 @@ export class AddEditDeviceType implements OnInit {
       });
     } else {
       this.deviceTypeService.createDeviceType(payload).subscribe({
-        next: (res) => {
+        next: (res: BaseResponse<DeviceTypeList>) => {
           this.commonService.hideSpinner();
-          if (res.success) {
-            this.toastr.success(res.message || 'Device type created successfully');
+          if (res && res.status.code === 0) {
             this.close.emit(true);
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
           } else {
-            this.toastr.error(res.message || 'Failed to create device type');
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
           }
         },
         error: (err) => {
