@@ -19,5 +19,12 @@ export const API = {
         create_device_type: '/devicetype/create_device_type',
         update_device_type: '/devicetype/update_device_type',
         delete_device_type: '/devicetype/delete_device_type',
+    },
+    games_api: {
+        get_games: '/games/get_game',
+        get_game_by_id: '/games/get_game_by_id',
+        create_game: '/games/create_game',
+        update_game: '/games/update_game',
+        delete_game: '/games/delete_game'
     }
 }

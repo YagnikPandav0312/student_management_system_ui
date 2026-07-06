@@ -40,12 +40,8 @@ export class AddEditProviders implements OnInit {
         if (this.provider.logo.startsWith('http') || this.provider.logo.startsWith('data:')) {
           this.logoPreview.set(this.provider.logo);
         } else {
-          let path = this.provider.logo.replace(/\/+/g, '/');
-          if (!path.startsWith('/')) {
-            path = '/' + path;
-          }
-          this.logoPreview.set(`http://localhost:3000${path}`);
-        }
+          this.logoPreview.set(`${this.provider.logo}`);
+        } 
       } else {
         this.logoPreview.set(null);
       }

@@ -1,0 +1,117 @@
+<div class="feature-page">
+  <!-- Page Header -->
+  <div class="page-header d-flex flex-wrap align-items-center justify-content-between mb-4">
+    <div class="header-title">
+      <h2>Games Catalog</h2>
+      <p class="text-muted">Manage the repository of games, provider mappings, types, and stakes</p>
+    </div>
+
+    <div class="header-actions d-flex align-items-center gap-3">
+      <!-- Search Input -->
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" class="form-control" placeholder="Search games..." [(ngModel)]="searchQuery" />
+      </div>
+
+      <!-- Add Button -->
+      <button class="btn btn-add-custom" (click)="openFormModal()">
+        <i class="fa-solid fa-plus me-2"></i> Add Game
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Card -->
+  <div class="content-card">
+    <!-- Table View -->
+    @if (filteredGames().length > 0) {
+    <div class="table-responsive">
+      <table class="table custom-table align-middle">
+        <thead>
+          <tr>
+            <th scope="col" style="width: 80px;">ID</th>
+            <th scope="col" style="width: 70px;">Logo</th>
+            <th scope="col">Game Name</th>
+            <th scope="col">Provider</th>
+            <th scope="col">Game Type</th>
+            <th scope="col">RTP & Variance</th>
+            <th scope="col">Min/Max Bet</th>
+            <th scope="col">Max Win</th>
+            <th scope="col" class="text-end" style="width: 130px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (game of filteredGames(); track game.game_id; let i = $index) {
+          <tr>
+            <td class="item-id">{{ i + 1 }}</td>
+            <td>
+              <div class="game-thumbnail-wrapper">
+                @if (game.thumbnail) {
+                  <img [src]="game.thumbnail" alt="thumbnail" class="game-thumbnail-img" />
+                } @else {
+                  <div class="game-thumbnail-placeholder">
+                    <i class="fa-solid fa-gamepad"></i>
+                  </div>
+                }
+              </div>
+            </td>
+            <td>
+              <div class="game-name-wrapper">
+                <span class="item-name">{{ game.game_name }}</span>
+                <span class="item-slug text-muted">{{ game.slug || 'no-slug' }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="badge badge-provider">{{ getProviderName(game.provider_id) }}</span>
+            </td>
+            <td>
+              <span class="badge badge-type">{{ getGameTypeName(game.game_type_id) }}</span>
+            </td>
+            <td>
+              <div class="rtp-variance-wrapper">
+                <span class="rtp-text">RTP: {{ game.rtp ? (game.rtp + '%') : '-' }}</span>
+                <span class="variance-text text-muted">{{ game.variance || '-' }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="bet-range">
+                <span>{{ game.min_bet ? ('$' + game.min_bet) : '-' }}</span>
+                <span class="text-muted mx-1">/</span>
+                <span>{{ game.max_bet ? ('$' + game.max_bet) : '-' }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="max-win-text text-success font-weight-bold">{{ game.max_win || '-' }}</span>
+            </td>
+            <td class="text-end">
+              <div class="action-buttons d-inline-flex gap-2">
+                <button class="btn btn-action btn-edit" (click)="openFormModal(game)" title="Edit Game">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button class="btn btn-action btn-delete" (click)="onDeleteGame(game)" title="Delete Game">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    } @else {
+    <div class="empty-state-container text-center py-5">
+      <div class="empty-state-icon mb-3">
+        <i class="fa-solid fa-gamepad"></i>
+      </div>
+      <h4>No Games Found</h4>
+      <p class="text-muted">
+        {{ searchQuery() ? 'No games match your search query.' : 'Get started by adding your first game to the catalog.' }}
+      </p>
+      @if (!searchQuery()) {
+      <button class="btn btn-add-custom btn-sm mt-2" (click)="openFormModal()">
+        <i class="fa-solid fa-plus me-2"></i> Create Game
+      </button>
+      }
+    </div>
+    }
+  </div>
+</div>

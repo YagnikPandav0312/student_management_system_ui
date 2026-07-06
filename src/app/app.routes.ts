@@ -36,6 +36,10 @@ export const routes: Routes = [
       {
         path: 'device-type',
         loadComponent: () => import('./features/device-type/device-type').then((m) => m.DeviceType)
+      },
+      {
+        path: 'games',
+        loadComponent: () => import('./features/games/games').then((m) => m.Games)
       }
     ],
   },

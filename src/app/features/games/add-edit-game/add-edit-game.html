@@ -1,0 +1,187 @@
+<div class="form-container">
+  <div class="form-header">
+    <h3>{{ isEditMode() ? 'Edit Game' : 'Add New Game' }}</h3>
+    <button type="button" class="btn-close-panel" (click)="onCancel()" aria-label="Close panel">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-body">
+    <div class="row g-3 mb-4">
+      <!-- Game Name -->
+      <div class="col-md-6">
+        <label for="game_name" class="form-label">Game Name <span class="required">*</span></label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-gamepad input-icon"></i>
+          <input type="text" id="game_name" class="form-control" formControlName="game_name" placeholder="Enter game name"
+            [class.is-invalid]="submitted() && f['game_name'].errors" />
+        </div>
+        @if (submitted() && f['game_name'].errors) {
+        <div class="error-feedback">
+          @if (f['game_name'].errors['required']) {
+            Game Name is required
+          }
+          @if (f['game_name'].errors['maxlength']) {
+            Game Name cannot exceed 100 characters
+          }
+        </div>
+        }
+      </div>
+
+      <!-- Slug -->
+      <div class="col-md-6">
+        <label for="slug" class="form-label">Slug <span class="required">*</span></label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-link input-icon"></i>
+          <input type="text" id="slug" class="form-control" formControlName="slug" placeholder="e.g. sweet-bonanza"
+            [class.is-invalid]="submitted() && f['slug'].errors" />
+        </div>
+        @if (submitted() && f['slug'].errors) {
+        <div class="error-feedback">
+          @if (f['slug'].errors['required']) {
+            Slug is required
+          }
+          @if (f['slug'].errors['pattern']) {
+            Slug must contain only lowercase letters, numbers, and hyphens (-)
+          }
+        </div>
+        }
+      </div>
+
+      <!-- Provider -->
+      <div class="col-md-4">
+        <label for="provider_id" class="form-label">Provider <span class="required">*</span></label>
+        <select id="provider_id" class="form-select" formControlName="provider_id"
+          [class.is-invalid]="submitted() && f['provider_id'].errors">
+          <option value="" disabled selected>Select Provider</option>
+          @for (provider of providers; track provider.provider_id) {
+            <option [value]="provider.provider_id">{{ provider.provider_name }}</option>
+          }
+        </select>
+        @if (submitted() && f['provider_id'].errors) {
+        <div class="error-feedback">
+          Provider is required
+        </div>
+        }
+      </div>
+
+      <!-- Game Type -->
+      <div class="col-md-4">
+        <label for="game_type_id" class="form-label">Game Type <span class="required">*</span></label>
+        <select id="game_type_id" class="form-select" formControlName="game_type_id"
+          [class.is-invalid]="submitted() && f['game_type_id'].errors">
+          <option value="" disabled selected>Select Game Type</option>
+          @for (type of gameTypes; track type.game_type_id) {
+            <option [value]="type.game_type_id">{{ type.game_type_name }}</option>
+          }
+        </select>
+        @if (submitted() && f['game_type_id'].errors) {
+        <div class="error-feedback">
+          Game Type is required
+        </div>
+        }
+      </div>
+
+      <!-- Release Date -->
+      <div class="col-md-4">
+        <label for="release_date" class="form-label">Release Date</label>
+        <input type="date" id="release_date" class="form-control" formControlName="release_date" />
+      </div>
+
+      <!-- Max Win -->
+      <div class="col-md-4">
+        <label for="max_win" class="form-label">Max Win</label>
+        <input type="text" id="max_win" class="form-control" formControlName="max_win" placeholder="e.g. 5000x"
+          [class.is-invalid]="submitted() && f['max_win'].errors" />
+        @if (submitted() && f['max_win'].errors) {
+        <div class="error-feedback">
+          Max Win cannot exceed 100 characters
+        </div>
+        }
+      </div>
+
+      <!-- RTP -->
+      <div class="col-md-4">
+        <label for="rtp" class="form-label">RTP (%)</label>
+        <input type="number" step="0.01" id="rtp" class="form-control" formControlName="rtp" placeholder="e.g. 96.51"
+          [class.is-invalid]="submitted() && f['rtp'].errors" />
+        @if (submitted() && f['rtp'].errors) {
+        <div class="error-feedback">
+          RTP must be a value between 0 and 100
+        </div>
+        }
+      </div>
+
+      <!-- Min Bet -->
+      <div class="col-md-4">
+        <label for="min_bet" class="form-label">Min Bet ($)</label>
+        <input type="number" step="0.01" id="min_bet" class="form-control" formControlName="min_bet" placeholder="0.20"
+          [class.is-invalid]="submitted() && f['min_bet'].errors" />
+        @if (submitted() && f['min_bet'].errors) {
+        <div class="error-feedback">
+          Min Bet must be 0 or higher
+        </div>
+        }
+      </div>
+
+      <!-- Max Bet -->
+      <div class="col-md-4">
+        <label for="max_bet" class="form-label">Max Bet ($)</label>
+        <input type="number" step="0.01" id="max_bet" class="form-control" formControlName="max_bet" placeholder="100.00"
+          [class.is-invalid]="submitted() && f['max_bet'].errors" />
+        @if (submitted() && f['max_bet'].errors) {
+        <div class="error-feedback">
+          Max Bet must be 0 or higher
+        </div>
+        }
+      </div>
+
+      <!-- Variance -->
+      <div class="col-md-4">
+        <label for="variance" class="form-label">Variance</label>
+        <select id="variance" class="form-select" formControlName="variance">
+          <option value="">Select Variance (Optional)</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+          <option value="Very High">Very High</option>
+        </select>
+      </div>
+
+      <!-- Thumbnail Image -->
+      <div class="col-12">
+        <label class="form-label">Game Thumbnail</label>
+        <div class="upload-dropzone" [class.has-preview]="thumbnailPreview()">
+          <input type="file" id="thumbnail" accept="image/*" (change)="onFileChange($event)" class="file-input" />
+          @if (!thumbnailPreview()) {
+          <div class="dropzone-content">
+            <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+            <span class="upload-text">Drag & drop your thumbnail here, or <span class="highlight">browse</span></span>
+            <span class="upload-hint">Supports PNG, JPG, JPEG</span>
+          </div>
+          }
+
+          @if (thumbnailPreview()) {
+          <div class="preview-container">
+            <img [src]="thumbnailPreview()" alt="Thumbnail Preview" class="img-preview" />
+            <div class="preview-overlay">
+              <span class="change-badge">
+                <i class="fa-solid fa-camera"></i> Change Image
+              </span>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="form-footer">
+      <button type="button" class="btn btn-secondary-custom" (click)="onCancel()">
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary-custom">
+        <i class="fa-solid fa-check me-2"></i> {{ isEditMode() ? 'Update' : 'Save' }}
+      </button>
+    </div>
+  </form>
+</div>

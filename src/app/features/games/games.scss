@@ -1,0 +1,84 @@
+.game-thumbnail-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--bg-card, #f8f9fa);
+  border: 1px solid var(--border-color, #e3e6f0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-thumbnail-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.game-thumbnail-placeholder {
+  font-size: 1.25rem;
+  color: var(--text-muted, #858796);
+}
+
+.game-name-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  .item-name {
+    font-weight: 600;
+    color: var(--text-dark, #2e59d9);
+  }
+
+  .item-slug {
+    font-size: 0.75rem;
+    word-break: break-all;
+  }
+}
+
+.badge {
+  padding: 0.4em 0.8em;
+  font-weight: 500;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+.badge-provider {
+  background-color: rgba(78, 115, 223, 0.1);
+  color: #4e73df;
+}
+
+.badge-category {
+  background-color: rgba(28, 200, 138, 0.1);
+  color: #1cc88a;
+}
+
+.badge-type {
+  background-color: rgba(246, 194, 62, 0.1);
+  color: #f6c23e;
+}
+
+.rtp-variance-wrapper {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+
+  .rtp-text {
+    font-weight: 600;
+    color: #36b9cc;
+  }
+
+  .variance-text {
+    font-size: 0.75rem;
+  }
+}
+
+.bet-range {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.max-win-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
