@@ -99,6 +99,23 @@
         }
       </div>
 
+      <!-- Device Type -->
+      <div class="col-md-4">
+        <label for="device_type_id" class="form-label">Device Type <span class="required">*</span></label>
+        <select id="device_type_id" class="form-select" formControlName="device_type_id"
+          [class.is-invalid]="submitted() && f['device_type_id'].errors">
+          <option value="" disabled selected>Select Device Type</option>
+          @for (type of deviceTypes; track type.device_type_id) {
+            <option [value]="type.device_type_id">{{ type.device_type_name }}</option>
+          }
+        </select>
+        @if (submitted() && f['device_type_id'].errors) {
+        <div class="error-feedback">
+          Device Type is required
+        </div>
+        }
+      </div>
+
       <!-- Release Date -->
       <div class="col-md-4">
         <label for="release_date" class="form-label">Release Date</label>

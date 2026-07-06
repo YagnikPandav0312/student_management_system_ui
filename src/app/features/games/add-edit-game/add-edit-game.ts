@@ -17,6 +17,7 @@ export class AddEditGame implements OnInit {
   @Input() providers: any[] = [];
   @Input() categories: any[] = [];
   @Input() gameTypes: any[] = [];
+  @Input() deviceTypes: any[] = [];
   @Output() close = new EventEmitter<boolean>();
 
   form!: FormGroup;
@@ -40,6 +41,7 @@ export class AddEditGame implements OnInit {
         provider_id: this.game.provider_id,
         category_id: this.game.category_id,
         game_type_id: this.game.game_type_id || '',
+        device_type_id: this.game.device_type_id || '',
         max_win: this.game.max_win || '',
         min_bet: this.game.min_bet || '',
         max_bet: this.game.max_bet || '',
@@ -76,6 +78,7 @@ export class AddEditGame implements OnInit {
       provider_id: ['', [Validators.required]],
       category_id: ['', [Validators.required]],
       game_type_id: ['', [Validators.required]],
+      device_type_id: ['', [Validators.required]],
       release_date: [''],
       max_win: ['', [Validators.maxLength(100)]],
       min_bet: ['', [Validators.min(0)]],
@@ -137,6 +140,7 @@ export class AddEditGame implements OnInit {
     formData.append('provider_id', this.form.get('provider_id')?.value);
     formData.append('category_id', this.form.get('category_id')?.value);
     formData.append('game_type_id', this.form.get('game_type_id')?.value);
+    formData.append('device_type_id', this.form.get('device_type_id')?.value);
     
     const releaseDate = this.form.get('release_date')?.value;
     if (releaseDate) {

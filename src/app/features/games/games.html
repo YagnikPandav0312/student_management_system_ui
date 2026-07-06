@@ -32,7 +32,9 @@
             <th scope="col" style="width: 70px;">Logo</th>
             <th scope="col">Game Name</th>
             <th scope="col">Provider</th>
+            <th scope="col">Category</th>
             <th scope="col">Game Type</th>
+            <th scope="col">Device Type</th>
             <th scope="col">RTP & Variance</th>
             <th scope="col">Min/Max Bet</th>
             <th scope="col">Max Win</th>
@@ -64,7 +66,13 @@
               <span class="badge badge-provider">{{ getProviderName(game.provider_id) }}</span>
             </td>
             <td>
+              <span class="badge badge-category">{{ getCategoryName(game.category_id) }}</span>
+            </td>
+            <td>
               <span class="badge badge-type">{{ getGameTypeName(game.game_type_id) }}</span>
+            </td>
+            <td>
+              <span class="badge badge-device">{{ getDeviceTypeName(game.device_type_id) }}</span>
             </td>
             <td>
               <div class="rtp-variance-wrapper">
