@@ -15,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 export class AddEditGame implements OnInit {
   @Input() game: any = null;
   @Input() providers: any[] = [];
+  @Input() categories: any[] = [];
   @Input() gameTypes: any[] = [];
   @Output() close = new EventEmitter<boolean>();
 
@@ -37,6 +38,7 @@ export class AddEditGame implements OnInit {
         game_name: this.game.game_name,
         slug: this.game.slug || '',
         provider_id: this.game.provider_id,
+        category_id: this.game.category_id,
         game_type_id: this.game.game_type_id || '',
         max_win: this.game.max_win || '',
         min_bet: this.game.min_bet || '',
@@ -72,6 +74,7 @@ export class AddEditGame implements OnInit {
       game_name: ['', [Validators.required, Validators.maxLength(100)]],
       slug: ['', [Validators.required, Validators.pattern(/^[a-z0-9-]+$/)]],
       provider_id: ['', [Validators.required]],
+      category_id: ['', [Validators.required]],
       game_type_id: ['', [Validators.required]],
       release_date: [''],
       max_win: ['', [Validators.maxLength(100)]],
@@ -132,6 +135,7 @@ export class AddEditGame implements OnInit {
     formData.append('game_name', this.form.get('game_name')?.value);
     formData.append('slug', this.form.get('slug')?.value);
     formData.append('provider_id', this.form.get('provider_id')?.value);
+    formData.append('category_id', this.form.get('category_id')?.value);
     formData.append('game_type_id', this.form.get('game_type_id')?.value);
     
     const releaseDate = this.form.get('release_date')?.value;

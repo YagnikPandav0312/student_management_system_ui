@@ -20,6 +20,13 @@ export const API = {
         update_device_type: '/devicetype/update_device_type',
         delete_device_type: '/devicetype/delete_device_type',
     },
+    game_category_api: {
+        get_game_category: '/gamecategory/get_game_category',
+        get_game_category_by_id: '/gamecategory/get_game_category_by_id',
+        create_game_category: '/gamecategory/create_game_category',
+        update_game_category: '/gamecategory/update_game_category',
+        delete_game_category: '/gamecategory/delete_game_category',
+    },
     games_api: {
         get_games: '/games/get_game',
         get_game_by_id: '/games/get_game_by_id',

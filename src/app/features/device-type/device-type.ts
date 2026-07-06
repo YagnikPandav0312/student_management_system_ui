@@ -25,15 +25,7 @@ export class DeviceType implements OnInit {
   private modalService = inject(NgbModal);
 
   filteredDeviceTypes = computed(() => {
-    const query = this.searchQuery().toLowerCase().trim();
-    if (!query) {
-      return this.deviceTypes();
-    }
-    return this.deviceTypes().filter(
-      (dt) =>
-        (dt.device_type_name && dt.device_type_name.toLowerCase().includes(query)) ||
-        (dt.slug && dt.slug.toLowerCase().includes(query))
-    );
+    return this.deviceTypes();
   });
 
   ngOnInit(): void {

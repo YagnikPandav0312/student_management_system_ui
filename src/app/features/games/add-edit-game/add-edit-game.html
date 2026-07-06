@@ -65,6 +65,23 @@
         }
       </div>
 
+      <!-- Category -->
+      <div class="col-md-4">
+        <label for="category_id" class="form-label">Category <span class="required">*</span></label>
+        <select id="category_id" class="form-select" formControlName="category_id"
+          [class.is-invalid]="submitted() && f['category_id'].errors">
+          <option value="" disabled selected>Select Category</option>
+          @for (cat of categories; track cat.game_categorie_id) {
+            <option [value]="cat.game_categorie_id">{{ cat.game_categorie_name }}</option>
+          }
+        </select>
+        @if (submitted() && f['category_id'].errors) {
+        <div class="error-feedback">
+          Category is required
+        </div>
+        }
+      </div>
+
       <!-- Game Type -->
       <div class="col-md-4">
         <label for="game_type_id" class="form-label">Game Type <span class="required">*</span></label>

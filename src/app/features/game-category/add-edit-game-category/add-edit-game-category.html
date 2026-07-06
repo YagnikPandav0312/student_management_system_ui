@@ -1,0 +1,55 @@
+<div class="form-container">
+  <div class="form-header">
+    <h3>{{ isEditMode() ? 'Edit Game Category' : 'Add New Game Category' }}</h3>
+    <button type="button" class="btn-close-panel" (click)="onCancel()" aria-label="Close panel">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-body">
+    <div class="form-group mb-4">
+      <label for="game_categorie_name" class="form-label">Game Category Name <span class="required">*</span></label>
+      <div class="input-wrapper">
+        <i class="fa-solid fa-tags input-icon"></i>
+        <input type="text" id="game_categorie_name" formControlName="game_categorie_name" class="form-control"
+          placeholder="Enter game category name..." [class.is-invalid]="submitted() && f['game_categorie_name'].errors" />
+      </div>
+      @if (submitted() && f['game_categorie_name'].errors) {
+      <div class="error-feedback">
+        @if (f['game_categorie_name'].errors['required']) {
+        <span>Game category name is required.</span>
+        }
+        @if (f['game_categorie_name'].errors['maxlength']) {
+        <span>Game category name cannot exceed 100 characters.</span>
+        }
+      </div>
+      }
+    </div>
+
+    <div class="form-group mb-4">
+      <label for="slug" class="form-label">Slug URL <span class="required">*</span></label>
+      <div class="input-wrapper">
+        <i class="fa-solid fa-link input-icon"></i>
+        <input type="text" id="slug" formControlName="slug" class="form-control" placeholder="e.g. video-slots"
+          [class.is-invalid]="submitted() && f['slug'].errors" />
+      </div>
+      @if (submitted() && f['slug'].errors) {
+      <div class="error-feedback">
+        @if (f['slug'].errors['required']) {
+        <span>Slug is required.</span>
+        }
+        @if (f['slug'].errors['pattern']) {
+        <span>Slug must be lowercase alphanumeric and dashes only (e.g. video-slots).</span>
+        }
+      </div>
+      }
+    </div>
+
+    <div class="form-footer">
+      <button type="button" class="btn btn-secondary-custom" (click)="onCancel()">Cancel</button>
+      <button type="submit" class="btn btn-primary-custom">
+        <i class="fa-solid fa-check me-2"></i> {{ isEditMode() ? 'Update' : 'Save' }}
+      </button>
+    </div>
+  </form>
+</div>
