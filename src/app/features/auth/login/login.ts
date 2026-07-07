@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Auth } from '../../../core/services/auth';
 import { Common } from '../../../core/services/common';
@@ -9,7 +9,7 @@ import { loginResponse } from '../../../model/account.model';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
@@ -28,6 +28,10 @@ export class Login {
   ) { }
 
   ngOnInit(): void {
+    if (localStorage.getItem('token')) {
+      this.router.navigate(['/dashboard']);
+      return;
+    }
     this.loginForm = this.fb.group({
       user_name: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -52,9 +56,9 @@ export class Login {
     this.authService.login(this.loginForm.value).subscribe({
       next: (res: BaseResponse<loginResponse>) => {
         if (res && res.status.code === 0) {
-          // localStorage.setItem('token', res.data.token);
-          // localStorage.setItem('role_id', res.data.role_id.toString());
-          // localStorage.setItem('user', JSON.stringify(res.data));
+          localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('user', JSON.stringify(res.data.user));
           this.router.navigate(['/dashboard']);
           this.submitted.set(false);
           this.commonService.hideSpinner();

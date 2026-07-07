@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { LoginRequest } from '../../model/auth.model';
+import { LoginRequest, RegisterRequest } from '../../model/auth.model';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environment/environment';
 
@@ -16,6 +16,10 @@ export class Auth {
   constructor() {}
 
   login(data: LoginRequest): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, data);
+    return this.http.post(`${this.baseUrl}/auth/login`, data);
+  }
+
+  register(data: RegisterRequest): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/register`, data);
   }
 }

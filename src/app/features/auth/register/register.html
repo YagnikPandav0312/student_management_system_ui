@@ -1,0 +1,91 @@
+<div class="container">
+  <!-- Left Side -->
+  <div class="left-panel">
+    <div class="logo">
+      <i class="fa-solid fa-graduation-cap"></i>
+      <span>Game Catalog System</span>
+    </div>
+    <h1>Get Started!</h1>
+    <h2>Create your account</h2>
+    <p>Manage providers, games, categories, types, and device configurations in one place.</p>
+    <img src="images/login-illustration.png" alt="Register Image" />
+  </div>
+  <div class="right-panel">
+    <div class="register-card">
+      <h2>Register</h2>
+      <p>Please fill in your details to create an account</p>
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <label>Full Name</label>
+        <div class="input-box">
+          <i class="fa-solid fa-user-tag"></i>
+          <input type="text" formControlName="full_name" placeholder="Enter full name" />
+        </div>
+        @if (f['full_name'].touched && f['full_name'].errors) {
+          <div class="text-danger mt-1">
+            @if (f['full_name'].errors['required']) {
+              <small>Full name is required</small>
+            }
+          </div>
+        }
+
+        <label>Email Address</label>
+        <div class="input-box">
+          <i class="fa-solid fa-envelope"></i>
+          <input type="email" formControlName="email" placeholder="Enter email address" />
+        </div>
+        @if (f['email'].touched && f['email'].errors) {
+          <div class="text-danger mt-1">
+            @if (f['email'].errors['required']) {
+              <small>Email is required</small>
+            }
+            @if (f['email'].errors['email']) {
+              <small>Please enter a valid email address</small>
+            }
+          </div>
+        }
+
+        <label>Password</label>
+        <div class="input-box">
+          <i class="fa-solid fa-lock"></i>
+          <input
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Enter password"
+          />
+          <i
+            class="fa-solid"
+            [class.fa-eye]="!showPassword()"
+            [class.fa-eye-slash]="showPassword()"
+            (click)="togglePassword()"
+            style="cursor: pointer"
+          ></i>
+        </div>
+        @if (f['password'].touched && f['password'].errors) {
+          <div class="text-danger mt-1">
+            @if (f['password'].errors['required']) {
+              <small>Password is required</small>
+            }
+            @if (f['password'].errors['minlength']) {
+              <small>Password must be at least 6 characters</small>
+            }
+          </div>
+        }
+
+        <label>Role</label>
+        <div class="input-box">
+          <i class="fa-solid fa-user-shield"></i>
+          <select formControlName="role">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
+        <button type="submit" class="register-btn" [disabled]="registerForm.invalid">Register</button>
+
+        <div class="options">
+          <a routerLink="/login">Already have an account? Login</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

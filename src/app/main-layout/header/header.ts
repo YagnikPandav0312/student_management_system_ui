@@ -28,7 +28,7 @@ export class Header {
     modalRef.componentInstance.message = 'Are you sure you want to logout ?';
     modalRef.componentInstance.onClose.subscribe((returnData: any) => {
       if (returnData) {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/login']);
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('token');
         localStorage.removeItem('user');

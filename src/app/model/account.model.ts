@@ -1,6 +1,12 @@
-export interface loginResponse {
+export interface User {
   user_id: number;
-  role_id: number;
-  user_name: string;
+  full_name: string;
+  email: string;
+  role: string;
+  is_active: boolean;
+}
+
+export interface loginResponse {
   token: string;
+  user: User;
 }

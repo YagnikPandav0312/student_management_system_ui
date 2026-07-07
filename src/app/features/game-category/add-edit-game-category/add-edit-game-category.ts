@@ -100,7 +100,7 @@ export class AddEditGameCategory implements OnInit {
         },
         error: (err) => {
           this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'An error occurred while updating game category');
+          this.toastr.error(err.error?.status?.message || err.error?.message || 'An error occurred while updating game category');
         },
       });
     } else {
@@ -118,7 +118,7 @@ export class AddEditGameCategory implements OnInit {
         },
         error: (err) => {
           this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'An error occurred while creating game category');
+          this.toastr.error(err.error?.status?.message || err.error?.message || 'An error occurred while creating game category');
         },
       });
     }
