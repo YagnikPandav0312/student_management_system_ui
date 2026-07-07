@@ -3,6 +3,8 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API } from '../constants/api-endpoints';
 import { environment } from '../../../environment/environment';
+import { ProviderList } from '../../model/provider.model';
+import { BaseResponse } from '../../model/api.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,23 +13,23 @@ export class ProviderService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
 
-  getProviders(): Observable<any> {
-    return this.http.get(`${this.baseUrl}${API.providers_api.get_providers}`);
+  getProviders(): Observable<BaseResponse<ProviderList[]>> {
+    return this.http.get<BaseResponse<ProviderList[]>>(`${this.baseUrl}${API.providers_api.get_providers}`);
   }
 
-  getProviderById(id: number | string): Observable<any> {
-    return this.http.get(`${this.baseUrl}${API.providers_api.get_provider_by_id}/${id}`);
+  getProviderById(id: number | string): Observable<BaseResponse<ProviderList>> {
+    return this.http.get<BaseResponse<ProviderList>>(`${this.baseUrl}${API.providers_api.get_provider_by_id}/${id}`);
   }
 
-  createProvider(formData: FormData): Observable<any> {
-    return this.http.post(`${this.baseUrl}${API.providers_api.create_providers}`, formData);
+  createProvider(formData: FormData): Observable<BaseResponse<ProviderList>> {
+    return this.http.post<BaseResponse<ProviderList>>(`${this.baseUrl}${API.providers_api.create_providers}`, formData);
   }
 
-  updateProvider(id: number | string, formData: FormData): Observable<any> {
-    return this.http.put(`${this.baseUrl}${API.providers_api.update_providers}/${id}`, formData);
+  updateProvider(id: number | string, formData: FormData): Observable<BaseResponse<ProviderList>> {
+    return this.http.put<BaseResponse<ProviderList>>(`${this.baseUrl}${API.providers_api.update_providers}/${id}`, formData);
   }
 
-  deleteProvider(id: number | string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}${API.providers_api.delete_provider}/${id}`);
+  deleteProvider(id: number | string): Observable<BaseResponse<any>> {
+    return this.http.delete<BaseResponse<any>>(`${this.baseUrl}${API.providers_api.delete_provider}/${id}`);
   }
 }

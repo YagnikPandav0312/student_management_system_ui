@@ -12,6 +12,12 @@ import { AddEditGame } from './add-edit-game/add-edit-game';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Confirm } from '../../shared/component/confirm/confirm';
 import { forkJoin } from 'rxjs';
+import { BaseResponse } from '../../model/api.model';
+import { GameList } from '../../model/game.model';
+import { ProviderList } from '../../model/provider.model';
+import { GameCategoryList } from '../../model/game-category.model';
+import { GameTypeList } from '../../model/game-type.model';
+import { DeviceTypeList } from '../../model/device-type.model';
 
 @Component({
   selector: 'app-games',
@@ -21,13 +27,13 @@ import { forkJoin } from 'rxjs';
   styleUrl: './games.scss',
 })
 export class Games implements OnInit {
-  games = signal<any[]>([]);
+  games = signal<GameList[]>([]);
   searchQuery = signal<string>('');
 
-  providers = signal<any[]>([]);
-  categories = signal<any[]>([]);
-  gameTypes = signal<any[]>([]);
-  deviceTypes = signal<any[]>([]);
+  providers = signal<ProviderList[]>([]);
+  categories = signal<GameCategoryList[]>([]);
+  gameTypes = signal<GameTypeList[]>([]);
+  deviceTypes = signal<DeviceTypeList[]>([]);
 
   providersMap = new Map<number, string>();
   categoriesMap = new Map<number, string>();
@@ -68,19 +74,19 @@ export class Games implements OnInit {
       deviceTypes: this.deviceTypeService.getDeviceTypes(),
     }).subscribe({
       next: (res: any) => {
-        if (res.providers.success) {
+        if (res.providers && res.providers.status && res.providers.status.code === 0) {
           this.providers.set(res.providers.data || []);
           res.providers.data.forEach((p: any) => this.providersMap.set(p.provider_id, p.provider_name));
         }
-        if (res.categories.success) {
+        if (res.categories && res.categories.status && res.categories.status.code === 0) {
           this.categories.set(res.categories.data || []);
           res.categories.data.forEach((c: any) => this.categoriesMap.set(c.game_categorie_id, c.game_categorie_name));
         }
-        if (res.gameTypes.success) {
+        if (res.gameTypes && res.gameTypes.status && res.gameTypes.status.code === 0) {
           this.gameTypes.set(res.gameTypes.data || []);
           res.gameTypes.data.forEach((gt: any) => this.gameTypesMap.set(gt.game_type_id, gt.game_type_name));
         }
-        if (res.deviceTypes.success) {
+        if (res.deviceTypes && res.deviceTypes.status && res.deviceTypes.status.code === 0) {
           this.deviceTypes.set(res.deviceTypes.data || []);
           res.deviceTypes.data.forEach((dt: any) => this.deviceTypesMap.set(dt.device_type_id, dt.device_type_name));
         }
@@ -96,12 +102,12 @@ export class Games implements OnInit {
 
   loadGames(): void {
     this.gameService.getGames().subscribe({
-      next: (res) => {
+      next: (res: BaseResponse<GameList[]>) => {
         this.commonService.hideSpinner();
-        if (res.success) {
+        if (res.status.code === 0) {
           this.games.set(res.data || []);
         } else {
-          this.toastr.error(res.message || 'Failed to fetch games');
+          this.commonService.manageStatus(res.status);
         }
       },
       error: (err) => {
@@ -129,7 +135,7 @@ export class Games implements OnInit {
     return this.deviceTypesMap.get(id) || 'Unknown';
   }
 
-  openFormModal(item?: any): void {
+  openFormModal(item?: GameList): void {
     const modalRef = this.modalService.open(AddEditGame, {
       centered: true,
       backdrop: 'static',
@@ -149,7 +155,7 @@ export class Games implements OnInit {
     });
   }
 
-  onDeleteGame(game: any): void {
+  onDeleteGame(game: GameList): void {
     const modalRef = this.modalService.open(Confirm, {
       centered: true,
       backdrop: 'static',
@@ -161,13 +167,13 @@ export class Games implements OnInit {
       if (returnData) {
         this.commonService.showSpinner();
         this.gameService.deleteGame(game.game_id).subscribe({
-          next: (res) => {
+          next: (res: BaseResponse<any>) => {
             this.commonService.hideSpinner();
-            if (res.success) {
-              this.toastr.success(res.message || 'Game deleted successfully');
+            if (res.status.code === 0) {
+              this.commonService.manageStatus(res.status);
               this.loadLookupsAndGames();
             } else {
-              this.toastr.error(res.message || 'Failed to delete game');
+              this.commonService.manageStatus(res.status);
             }
           },
           error: (err) => {

@@ -5,7 +5,6 @@ import { DeviceTypeService } from '../../../core/services/device-type';
 import { Common } from '../../../core/services/common';
 import { ToastrService } from 'ngx-toastr';
 import { BaseResponse } from '../../../model/api.model';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { DeviceTypeList } from '../../../model/device-type.model';
 
 @Component({
@@ -21,7 +20,6 @@ export class AddEditDeviceType implements OnInit {
   form!: FormGroup;
   submitted = signal<boolean>(false);
   isEditMode = signal<boolean>(false);
-  modelService = inject(NgbActiveModal);
   private fb = inject(FormBuilder);
   private deviceTypeService = inject(DeviceTypeService);
   private commonService = inject(Common);
@@ -88,13 +86,12 @@ export class AddEditDeviceType implements OnInit {
         next: (res: BaseResponse<DeviceTypeList>) => {
           this.commonService.hideSpinner();
           if (res && res.status.code === 0) {
-            this.close.emit(true);
             this.commonService.hideSpinner();
             this.commonService.manageStatus(res.status);
+            this.close.emit(true);
           } else {
             this.commonService.hideSpinner();
             this.commonService.manageStatus(res.status);
-            this.toastr.error(res.status.message || 'Failed to update device type');
           }
         },
         error: (err) => {

@@ -4,6 +4,12 @@ import { CommonModule } from '@angular/common';
 import { GameService } from '../../../core/services/game';
 import { Common } from '../../../core/services/common';
 import { ToastrService } from 'ngx-toastr';
+import { BaseResponse } from '../../../model/api.model';
+import { GameList } from '../../../model/game.model';
+import { ProviderList } from '../../../model/provider.model';
+import { GameCategoryList } from '../../../model/game-category.model';
+import { GameTypeList } from '../../../model/game-type.model';
+import { DeviceTypeList } from '../../../model/device-type.model';
 
 @Component({
   selector: 'app-add-edit-game',
@@ -13,11 +19,11 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './add-edit-game.scss',
 })
 export class AddEditGame implements OnInit {
-  @Input() game: any = null;
-  @Input() providers: any[] = [];
-  @Input() categories: any[] = [];
-  @Input() gameTypes: any[] = [];
-  @Input() deviceTypes: any[] = [];
+  @Input() game: GameList | null = null;
+  @Input() providers: ProviderList[] = [];
+  @Input() categories: GameCategoryList[] = [];
+  @Input() gameTypes: GameTypeList[] = [];
+  @Input() deviceTypes: DeviceTypeList[] = [];
   @Output() close = new EventEmitter<boolean>();
 
   form!: FormGroup;
@@ -174,20 +180,22 @@ export class AddEditGame implements OnInit {
 
     if (this.selectedFile) {
       formData.append('thumbnail', this.selectedFile);
-    } else if (this.isEditMode() && this.game.thumbnail) {
-      formData.append('thumbnail', this.game.thumbnail);
+    } else if (this.isEditMode() && this.game!.thumbnail) {
+      formData.append('thumbnail', this.game!.thumbnail);
     }
 
     this.commonService.showSpinner();
     if (this.isEditMode()) {
-      this.gameService.updateGame(this.game.game_id, formData).subscribe({
-        next: (res) => {
+      this.gameService.updateGame(this.game!.game_id, formData).subscribe({
+        next: (res: BaseResponse<GameList>) => {
           this.commonService.hideSpinner();
-          if (res.success) {
-            this.toastr.success(res.message || 'Game updated successfully');
+          if (res && res.status.code === 0) {
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
             this.close.emit(true);
           } else {
-            this.toastr.error(res.message || 'Failed to update game');
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
           }
         },
         error: (err) => {
@@ -197,13 +205,15 @@ export class AddEditGame implements OnInit {
       });
     } else {
       this.gameService.createGame(formData).subscribe({
-        next: (res) => {
+        next: (res: BaseResponse<GameList>) => {
           this.commonService.hideSpinner();
-          if (res.success) {
-            this.toastr.success(res.message || 'Game created successfully');
+          if (res && res.status.code === 0) {
             this.close.emit(true);
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
           } else {
-            this.toastr.error(res.message || 'Failed to create game');
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
           }
         },
         error: (err) => {

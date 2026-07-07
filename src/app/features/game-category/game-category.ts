@@ -7,6 +7,8 @@ import { ToastrService } from 'ngx-toastr';
 import { AddEditGameCategory } from './add-edit-game-category/add-edit-game-category';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Confirm } from '../../shared/component/confirm/confirm';
+import { BaseResponse } from '../../model/api.model';
+import { GameCategoryList } from '../../model/game-category.model';
 
 @Component({
   selector: 'app-game-category',
@@ -16,7 +18,7 @@ import { Confirm } from '../../shared/component/confirm/confirm';
   styleUrl: './game-category.scss',
 })
 export class GameCategory implements OnInit {
-  gameCategories = signal<any[]>([]);
+  gameCategories = signal<GameCategoryList[]>([]);
   searchQuery = signal<string>('');
 
   private gameCategoryService = inject(GameCategoryService);
@@ -25,7 +27,12 @@ export class GameCategory implements OnInit {
   private modalService = inject(NgbModal);
 
   filteredGameCategories = computed(() => {
-    return this.gameCategories();
+    const query = this.searchQuery().toLowerCase().trim();
+    if (!query) return this.gameCategories();
+    return this.gameCategories().filter(c => 
+      c.game_categorie_name.toLowerCase().includes(query) ||
+      (c.slug && c.slug.toLowerCase().includes(query))
+    );
   });
 
   ngOnInit(): void {
@@ -35,22 +42,24 @@ export class GameCategory implements OnInit {
   loadGameCategories(): void {
     this.commonService.showSpinner();
     this.gameCategoryService.getGameCategories().subscribe({
-      next: (res) => {
+      next: (res: BaseResponse<GameCategoryList[]>) => {
         this.commonService.hideSpinner();
-        if (res.success) {
+        if (res.status.code === 0) {
           this.gameCategories.set(res.data || []);
+          this.commonService.hideSpinner();
         } else {
-          this.toastr.error(res.message || 'Failed to fetch game categories');
+          this.commonService.manageStatus(res.status);
+          this.commonService.hideSpinner();
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         this.commonService.hideSpinner();
         this.toastr.error(err.error?.message || 'Error occurred while loading game categories');
       },
     });
   }
 
-  openFormModal(item?: any): void {
+  openFormModal(item?: GameCategoryList): void {
     const modalRef = this.modalService.open(AddEditGameCategory, {
       centered: true,
       backdrop: 'static',
@@ -65,7 +74,7 @@ export class GameCategory implements OnInit {
     });
   }
 
-  onDeleteGameCategory(gameCategory: any): void {
+  onDeleteGameCategory(gameCategory: GameCategoryList): void {
     const modalRef = this.modalService.open(Confirm, {
       centered: true,
       backdrop: 'static',
@@ -77,13 +86,15 @@ export class GameCategory implements OnInit {
       if (returnData) {
         this.commonService.showSpinner();
         this.gameCategoryService.deleteGameCategory(gameCategory.game_categorie_id).subscribe({
-          next: (res) => {
+          next: (res: BaseResponse<any>) => {
             this.commonService.hideSpinner();
-            if (res.success) {
-              this.toastr.success(res.message || 'Game category deleted successfully');
+            if (res.status.code === 0) {
               this.loadGameCategories();
+              this.commonService.manageStatus(res.status);
+              this.commonService.hideSpinner();
             } else {
-              this.toastr.error(res.message || 'Failed to delete game category');
+              this.commonService.manageStatus(res.status);
+              this.commonService.hideSpinner();
             }
           },
           error: (err) => {

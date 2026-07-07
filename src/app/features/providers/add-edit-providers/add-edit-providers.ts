@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ProviderService } from '../../../core/services/provider';
 import { Common } from '../../../core/services/common';
 import { ToastrService } from 'ngx-toastr';
+import { BaseResponse } from '../../../model/api.model';
+import { ProviderList } from '../../../model/provider.model';
 
 @Component({
   selector: 'app-add-edit-providers',
@@ -12,9 +14,8 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './add-edit-providers.html',
   styleUrl: './add-edit-providers.scss',
 })
-
 export class AddEditProviders implements OnInit {
-  @Input() provider: any = null;
+  @Input() provider: ProviderList | null = null;
   @Output() close = new EventEmitter<boolean>();
 
   form!: FormGroup;
@@ -110,20 +111,22 @@ export class AddEditProviders implements OnInit {
     formData.append('slug', this.form.get('slug')?.value);
     if (this.selectedFile) {
       formData.append('logo', this.selectedFile);
-    } else if (this.isEditMode() && this.provider.logo) {
-      formData.append('logo', this.provider.logo);
+    } else if (this.isEditMode() && this.provider!.logo) {
+      formData.append('logo', this.provider!.logo);
     }
 
     this.commonService.showSpinner();
     if (this.isEditMode()) {
-      this.providerService.updateProvider(this.provider.provider_id, formData).subscribe({
-        next: (res) => {
+      this.providerService.updateProvider(this.provider!.provider_id, formData).subscribe({
+        next: (res: BaseResponse<ProviderList>) => {
           this.commonService.hideSpinner();
-          if (res.success) {
-            this.toastr.success(res.message || 'Provider updated successfully');
+          if (res && res.status.code === 0) {
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
             this.close.emit(true);
           } else {
-            this.toastr.error(res.message || 'Failed to update provider');
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
           }
         },
         error: (err) => {
@@ -133,13 +136,15 @@ export class AddEditProviders implements OnInit {
       });
     } else {
       this.providerService.createProvider(formData).subscribe({
-        next: (res) => {
+        next: (res: BaseResponse<ProviderList>) => {
           this.commonService.hideSpinner();
-          if (res.success) {
-            this.toastr.success(res.message || 'Provider created successfully');
+          if (res && res.status.code === 0) {
             this.close.emit(true);
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
           } else {
-            this.toastr.error(res.message || 'Failed to create provider');
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
           }
         },
         error: (err) => {

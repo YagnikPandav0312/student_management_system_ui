@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { GameCategoryService } from '../../../core/services/game-category';
 import { Common } from '../../../core/services/common';
 import { ToastrService } from 'ngx-toastr';
+import { BaseResponse } from '../../../model/api.model';
+import { GameCategoryList } from '../../../model/game-category.model';
 
 @Component({
   selector: 'app-add-edit-game-category',
@@ -13,7 +15,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './add-edit-game-category.scss',
 })
 export class AddEditGameCategory implements OnInit {
-  @Input() gameCategory: any = null;
+  @Input() gameCategory: GameCategoryList | null = null;
   @Output() close = new EventEmitter<boolean>();
 
   form!: FormGroup;
@@ -84,14 +86,16 @@ export class AddEditGameCategory implements OnInit {
 
     this.commonService.showSpinner();
     if (this.isEditMode()) {
-      this.gameCategoryService.updateGameCategory(this.gameCategory.game_categorie_id, payload).subscribe({
-        next: (res) => {
+      this.gameCategoryService.updateGameCategory(this.gameCategory!.game_categorie_id, payload).subscribe({
+        next: (res: BaseResponse<GameCategoryList>) => {
           this.commonService.hideSpinner();
-          if (res.success) {
-            this.toastr.success(res.message || 'Game category updated successfully');
+          if (res && res.status.code === 0) {
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
             this.close.emit(true);
           } else {
-            this.toastr.error(res.message || 'Failed to update game category');
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
           }
         },
         error: (err) => {
@@ -101,13 +105,15 @@ export class AddEditGameCategory implements OnInit {
       });
     } else {
       this.gameCategoryService.createGameCategory(payload).subscribe({
-        next: (res) => {
+        next: (res: BaseResponse<GameCategoryList>) => {
           this.commonService.hideSpinner();
-          if (res.success) {
-            this.toastr.success(res.message || 'Game category created successfully');
+          if (res && res.status.code === 0) {
             this.close.emit(true);
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
           } else {
-            this.toastr.error(res.message || 'Failed to create game category');
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
           }
         },
         error: (err) => {

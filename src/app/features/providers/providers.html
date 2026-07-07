@@ -23,7 +23,7 @@
   <!-- Content Card -->
   <div class="content-card">
     <!-- Table View -->
-    @if (providers().length > 0) {
+    @if (filteredProviders().length > 0) {
     <div class="table-responsive">
       <table class="table custom-table align-middle">
         <thead>
@@ -35,7 +35,7 @@
           </tr>
         </thead>
         <tbody>
-          @for ( provider of providers(); track provider.provider_id ; let i = $index) {
+          @for ( provider of filteredProviders(); track provider.provider_id ; let i = $index) {
           <tr>
             <td class="item-id d-none d-sm-table-cell">{{ i + 1 }}</td>
             <td>

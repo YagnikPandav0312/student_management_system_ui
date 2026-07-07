@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { GameTypeService } from '../../../core/services/game-type';
 import { Common } from '../../../core/services/common';
 import { ToastrService } from 'ngx-toastr';
+import { BaseResponse } from '../../../model/api.model';
+import { GameTypeList } from '../../../model/game-type.model';
 
 @Component({
   selector: 'app-add-edit-gametype',
@@ -13,13 +15,11 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './add-edit-game-type.scss',
 })
 export class AddEditGametype implements OnInit {
-  @Input() gameType: any = null;
+  @Input() gameType: GameTypeList | null = null;
   @Output() close = new EventEmitter<boolean>();
-
   form!: FormGroup;
   submitted = signal<boolean>(false);
   isEditMode = signal<boolean>(false);
-
   private fb = inject(FormBuilder);
   private gameTypeService = inject(GameTypeService);
   private commonService = inject(Common);
@@ -46,7 +46,7 @@ export class AddEditGametype implements OnInit {
     this.submitted.set(false);
 
     // Auto-generate slug from name if not in edit mode
-    this.form.get('game_types_name')?.valueChanges.subscribe(name => {
+    this.form.get('game_types_name')?.valueChanges.subscribe((name) => {
       if (!this.isEditMode() && name) {
         const slug = this.slugify(name);
         this.form.get('slug')?.setValue(slug, { emitEvent: false });
@@ -59,11 +59,11 @@ export class AddEditGametype implements OnInit {
       .toString()
       .toLowerCase()
       .trim()
-      .replace(/\s+/g, '-')           // Replace spaces with -
-      .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
-      .replace(/\-\-+/g, '-')         // Replace multiple - with single -
-      .replace(/^-+/, '')             // Trim - from start
-      .replace(/-+$/, '');            // Trim - from end
+      .replace(/\s+/g, '-') // Replace spaces with -
+      .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+      .replace(/\-\-+/g, '-') // Replace multiple - with single -
+      .replace(/^-+/, '') // Trim - from start
+      .replace(/-+$/, ''); // Trim - from end
   }
 
   get f() {
@@ -84,14 +84,16 @@ export class AddEditGametype implements OnInit {
 
     this.commonService.showSpinner();
     if (this.isEditMode()) {
-      this.gameTypeService.updateGameType(this.gameType.game_type_id, payload).subscribe({
-        next: (res) => {
+      this.gameTypeService.updateGameType(this.gameType!.game_type_id, payload).subscribe({
+        next: (res: BaseResponse<GameTypeList>) => {
           this.commonService.hideSpinner();
-          if (res.success) {
-            this.toastr.success(res.message || 'Game type updated successfully');
+          if (res && res.status.code === 0) {
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
             this.close.emit(true);
           } else {
-            this.toastr.error(res.message || 'Failed to update game type');
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
           }
         },
         error: (err) => {
@@ -101,13 +103,15 @@ export class AddEditGametype implements OnInit {
       });
     } else {
       this.gameTypeService.createGameType(payload).subscribe({
-        next: (res) => {
+        next: (res: BaseResponse<GameTypeList>) => {
           this.commonService.hideSpinner();
-          if (res.success) {
-            this.toastr.success(res.message || 'Game type created successfully');
+          if (res && res.status.code === 0) {
             this.close.emit(true);
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
           } else {
-            this.toastr.error(res.message || 'Failed to create game type');
+            this.commonService.hideSpinner();
+            this.commonService.manageStatus(res.status);
           }
         },
         error: (err) => {

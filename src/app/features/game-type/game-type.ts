@@ -7,6 +7,8 @@ import { ToastrService } from 'ngx-toastr';
 import { AddEditGametype } from './add-edit-game-type/add-edit-game-type';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Confirm } from '../../shared/component/confirm/confirm';
+import { BaseResponse } from '../../model/api.model';
+import { GameTypeList } from '../../model/game-type.model';
 
 @Component({
   selector: 'app-game-type',
@@ -16,7 +18,7 @@ import { Confirm } from '../../shared/component/confirm/confirm';
   styleUrl: './game-type.scss',
 })
 export class GameType implements OnInit {
-  gameTypes = signal<any[]>([]);
+  gameTypes = signal<GameTypeList[]>([]);
   searchQuery = signal<string>('');
 
   private gameTypeService = inject(GameTypeService);
@@ -25,7 +27,12 @@ export class GameType implements OnInit {
   private modalService = inject(NgbModal);
 
   filteredGameTypes = computed(() => {
-    return this.gameTypes();
+    const query = this.searchQuery().toLowerCase().trim();
+    if (!query) return this.gameTypes();
+    return this.gameTypes().filter(gt => 
+      gt.game_type_name.toLowerCase().includes(query) ||
+      (gt.slug && gt.slug.toLowerCase().includes(query))
+    );
   });
 
   ngOnInit(): void {
@@ -35,22 +42,24 @@ export class GameType implements OnInit {
   loadGameTypes(): void {
     this.commonService.showSpinner();
     this.gameTypeService.getGameTypes().subscribe({
-      next: (res) => {
+      next: (res: BaseResponse<GameTypeList[]>) => {
         this.commonService.hideSpinner();
-        if (res.success) {
+        if (res.status.code === 0) {
           this.gameTypes.set(res.data || []);
+          this.commonService.hideSpinner();
         } else {
-          this.toastr.error(res.message || 'Failed to fetch game types');
+          this.commonService.manageStatus(res.status);
+          this.commonService.hideSpinner();
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         this.commonService.hideSpinner();
         this.toastr.error(err.error?.message || 'Error occurred while loading game types');
       },
     });
   }
 
-  openFormModal(item?: any): void {
+  openFormModal(item?: GameTypeList): void {
     const modalRef = this.modalService.open(AddEditGametype, {
       centered: true,
       backdrop: 'static',
@@ -65,7 +74,7 @@ export class GameType implements OnInit {
     });
   }
 
-  onDeleteGameType(gameType: any): void {
+  onDeleteGameType(gameType: GameTypeList): void {
     const modalRef = this.modalService.open(Confirm, {
       centered: true,
       backdrop: 'static',
@@ -77,13 +86,15 @@ export class GameType implements OnInit {
       if (returnData) {
         this.commonService.showSpinner();
         this.gameTypeService.deleteGameType(gameType.game_type_id).subscribe({
-          next: (res) => {
+          next: (res: BaseResponse<any>) => {
             this.commonService.hideSpinner();
-            if (res.success) {
-              this.toastr.success(res.message || 'Game type deleted successfully');
+            if (res.status.code === 0) {
               this.loadGameTypes();
+              this.commonService.manageStatus(res.status);
+              this.commonService.hideSpinner();
             } else {
-              this.toastr.error(res.message || 'Failed to delete game type');
+              this.commonService.manageStatus(res.status);
+              this.commonService.hideSpinner();
             }
           },
           error: (err) => {

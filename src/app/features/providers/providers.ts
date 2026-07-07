@@ -7,6 +7,8 @@ import { ToastrService } from 'ngx-toastr';
 import { AddEditProviders } from './add-edit-providers/add-edit-providers';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Confirm } from '../../shared/component/confirm/confirm';
+import { BaseResponse } from '../../model/api.model';
+import { ProviderList } from '../../model/provider.model';
 
 @Component({
   selector: 'app-providers',
@@ -16,14 +18,23 @@ import { Confirm } from '../../shared/component/confirm/confirm';
   styleUrl: './providers.scss',
 })
 export class Providers implements OnInit {
-  providers = signal<any[]>([]);
+  providers = signal<ProviderList[]>([]);
   searchQuery = signal<string>('');
-  selectedProvider = signal<any | null>(null);
+  selectedProvider = signal<ProviderList | null>(null);
 
   private providerService = inject(ProviderService);
   private commonService = inject(Common);
   private toastr = inject(ToastrService);
   private modalService = inject(NgbModal);
+
+  filteredProviders = computed(() => {
+    const query = this.searchQuery().toLowerCase().trim();
+    if (!query) return this.providers();
+    return this.providers().filter(p => 
+      p.provider_name.toLowerCase().includes(query) ||
+      (p.slug && p.slug.toLowerCase().includes(query))
+    );
+  });
 
   getLogoUrl(logoPath: string | null | undefined): string | null {
     if (!logoPath) return null;
@@ -44,22 +55,24 @@ export class Providers implements OnInit {
   loadProviders(): void {
     this.commonService.showSpinner();
     this.providerService.getProviders().subscribe({
-      next: (res) => {
+      next: (res: BaseResponse<ProviderList[]>) => {
         this.commonService.hideSpinner();
-        if (res.success) {
+        if (res.status.code === 0) {
           this.providers.set(res.data || []);
+          this.commonService.hideSpinner();
         } else {
-          this.toastr.error(res.message || 'Failed to fetch providers');
+          this.commonService.manageStatus(res.status);
+          this.commonService.hideSpinner();
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         this.commonService.hideSpinner();
         this.toastr.error(err.error?.message || 'Error occurred while loading providers');
       },
     });
   }
 
-  openFormModal(item?: any): void {
+  openFormModal(item?: ProviderList): void {
     const modalRef = this.modalService.open(AddEditProviders, {
       centered: true,
       backdrop: 'static',
@@ -74,7 +87,7 @@ export class Providers implements OnInit {
     });
   }
 
-  onDeleteProvider(provider: any): void {
+  onDeleteProvider(provider: ProviderList): void {
     const modalRef = this.modalService.open(Confirm, {
       centered: true,
       backdrop: 'static',
@@ -86,13 +99,13 @@ export class Providers implements OnInit {
       if (returnData) {
         this.commonService.showSpinner();
         this.providerService.deleteProvider(provider.provider_id).subscribe({
-          next: (res) => {
+          next: (res: BaseResponse<any>) => {
             this.commonService.hideSpinner();
-            if (res.success) {
-              this.toastr.success(res.message || 'Provider deleted successfully');
+            if (res.status.code === 0) {
+              this.commonService.manageStatus(res.status);
               this.loadProviders();
             } else {
-              this.toastr.error(res.message || 'Failed to delete provider');
+              this.commonService.manageStatus(res.status);
             }
           },
           error: (err) => {
