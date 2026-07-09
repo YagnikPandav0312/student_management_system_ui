@@ -144,4 +144,24 @@ export class GameType implements OnInit {
       modalRef.close();
     });
   }
+
+  onToggleStatus(gameType: GameTypeList): void {
+    const newStatus = !gameType.is_active;
+    this.commonService.showSpinner();
+    this.gameTypeService.updateGameTypeStatus(gameType.game_type_id, newStatus).subscribe({
+      next: (res: BaseResponse<any>) => {
+        this.commonService.hideSpinner();
+        if (res.status.code === 0) {
+          this.commonService.manageStatus(res.status);
+          this.GetGameTypes();
+        } else {
+          this.commonService.manageStatus(res.status);
+        }
+      },
+      error: (err) => {
+        this.commonService.hideSpinner();
+        this.toastr.error(err.error?.message || 'Error occurred while updating game type status');
+      },
+    });
+  }
 }

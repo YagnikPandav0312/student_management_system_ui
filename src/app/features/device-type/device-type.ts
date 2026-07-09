@@ -144,4 +144,24 @@ export class DeviceType implements OnInit {
       modalRef.close();
     });
   }
+
+  onToggleStatus(deviceType: DeviceTypeList): void {
+    const newStatus = !deviceType.is_active;
+    this.commonService.showSpinner();
+    this.deviceTypeService.updateDeviceTypeStatus(deviceType.device_type_id, newStatus).subscribe({
+      next: (res: BaseResponse<any>) => {
+        this.commonService.hideSpinner();
+        if (res.status.code === 0) {
+          this.commonService.manageStatus(res.status);
+          this.GetDesviceTypeList();
+        } else {
+          this.commonService.manageStatus(res.status);
+        }
+      },
+      error: (err) => {
+        this.commonService.hideSpinner();
+        this.toastr.error(err.error?.message || 'Error occurred while updating device type status');
+      },
+    });
+  }
 }

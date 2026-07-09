@@ -220,4 +220,24 @@ export class Games implements OnInit {
       modalRef.close();
     });
   }
+
+  onToggleStatus(game: GameList): void {
+    const newStatus = !game.is_active;
+    this.commonService.showSpinner();
+    this.gameService.updateGameStatus(game.game_id, newStatus).subscribe({
+      next: (res: BaseResponse<any>) => {
+        this.commonService.hideSpinner();
+        if (res.status.code === 0) {
+          this.commonService.manageStatus(res.status);
+          this.loadGames(); // just reload games list, don't need to fetch lookups again
+        } else {
+          this.commonService.manageStatus(res.status);
+        }
+      },
+      error: (err) => {
+        this.commonService.hideSpinner();
+        this.toastr.error(err.error?.message || 'Error occurred while updating game status');
+      },
+    });
+  }
 }

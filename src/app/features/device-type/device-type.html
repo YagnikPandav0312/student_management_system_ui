@@ -37,6 +37,7 @@
               <th scope="col" class="d-none d-sm-table-cell" style="width: 100px">ID</th>
               <th scope="col">Device Type Name</th>
               <th scope="col" class="d-none d-sm-table-cell">Slug</th>
+              <th scope="col" style="width: 120px">Status</th>
               <th scope="col" class="text-end" style="width: 150px">Actions</th>
             </tr>
           </thead>
@@ -51,6 +52,15 @@
                   <span class="item-slug"
                     ><i class="fa-solid fa-link me-1"></i>{{ deviceType.slug || 'no-slug' }}</span
                   >
+                </td>
+                <td>
+                  <button class="btn btn-link p-0 border-0" (click)="onToggleStatus(deviceType)" [title]="deviceType.is_active ? 'Deactivate Device Type' : 'Activate Device Type'">
+                    @if (deviceType.is_active) {
+                      <i class="fa-solid fa-toggle-on text-success fs-4"></i>
+                    } @else {
+                      <i class="fa-solid fa-toggle-off text-secondary fs-4"></i>
+                    }
+                  </button>
                 </td>
                 <td class="text-end">
                   <div class="action-buttons d-inline-flex gap-2">

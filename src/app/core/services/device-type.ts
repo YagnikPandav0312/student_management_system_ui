@@ -32,4 +32,8 @@ export class DeviceTypeService {
   deleteDeviceType(id: number | string): Observable<BaseResponse<any>> {
     return this.http.delete<BaseResponse<any>>(`${this.baseUrl}${API.device_type_api.delete_device_type}/${id}`);
   }
+
+  updateDeviceTypeStatus(id: number | string, status: boolean): Observable<BaseResponse<any>> {
+    return this.http.put<BaseResponse<any>>(`${this.baseUrl}${API.device_type_api.update_device_type_status}/${id}`, { is_active: status });
+  }
 }

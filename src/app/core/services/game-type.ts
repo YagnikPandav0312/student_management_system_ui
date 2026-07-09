@@ -32,4 +32,8 @@ export class GameTypeService {
   deleteGameType(id: number | string): Observable<BaseResponse<any>> {
     return this.http.delete<BaseResponse<any>>(`${this.baseUrl}${API.game_type_api.delete_game_type}/${id}`);
   }
+
+  updateGameTypeStatus(id: number | string, status: boolean): Observable<BaseResponse<any>> {
+    return this.http.put<BaseResponse<any>>(`${this.baseUrl}${API.game_type_api.update_game_type_status}/${id}`, { is_active: status });
+  }
 }

@@ -32,4 +32,8 @@ export class ProviderService {
   deleteProvider(id: number | string): Observable<BaseResponse<any>> {
     return this.http.delete<BaseResponse<any>>(`${this.baseUrl}${API.providers_api.delete_provider}/${id}`);
   }
+
+  updateProviderStatus(id: number | string, status: boolean): Observable<BaseResponse<any>> {
+    return this.http.put<BaseResponse<any>>(`${this.baseUrl}${API.providers_api.update_provider_status}/${id}`, { is_active: status });
+  }
 }

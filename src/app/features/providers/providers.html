@@ -31,6 +31,7 @@
             <th scope="col" class="d-none d-sm-table-cell" style="width: 100px;">ID</th>
             <th scope="col" style="width: 120px;">Logo</th>
             <th scope="col">Provider Name</th>
+            <th scope="col" style="width: 120px;">Status</th>
             <th scope="col" class="text-end" style="width: 150px;">Actions</th>
           </tr>
         </thead>
@@ -41,7 +42,7 @@
             <td>
               <div class="logo-container">
                 @if (provider.logo) {
-                <img [src]="getLogoUrl(provider.logo)" alt="{{ provider.provider_name }} logo" class="provider-logo" />
+                 <img [src]="getLogoUrl(provider.logo)" alt="{{ provider.provider_name }} logo" class="provider-logo" />
                 } @else {
                 <div class="default-logo-avatar">
                   {{ provider.provider_name.charAt(0).toUpperCase() }}
@@ -54,6 +55,15 @@
                 <span class="item-name">{{ provider.provider_name }}</span>
                 <span class="item-slug"><i class="fa-solid fa-link me-1"></i>{{ provider.slug || 'no-slug' }}</span>
               </div>
+            </td>
+            <td>
+              <button class="btn btn-link p-0 border-0" (click)="onToggleStatus(provider)" [title]="provider.is_active ? 'Deactivate Provider' : 'Activate Provider'">
+                @if (provider.is_active) {
+                  <i class="fa-solid fa-toggle-on text-success fs-4"></i>
+                } @else {
+                  <i class="fa-solid fa-toggle-off text-secondary fs-4"></i>
+                }
+              </button>
             </td>
             <td class="text-end">
               <div class="action-buttons d-inline-flex gap-2">

@@ -68,8 +68,8 @@ export class Login {
           this.commonService.manageStatus(res.status);
         }
       },
-      error: (err) => {
-        this.toastr.error(err || 'Error User Login:', 'Error');
+      error: (err: any) => {
+        this.toastr.error(err || 'Error User Login', 'Error');
         this.commonService.hideSpinner();
         this.submitted.set(false);
       },

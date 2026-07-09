@@ -144,4 +144,24 @@ export class GameCategory implements OnInit {
       modalRef.close();
     });
   }
+
+  onToggleStatus(gameCategory: GameCategoryList): void {
+    const newStatus = !gameCategory.is_active;
+    this.commonService.showSpinner();
+    this.gameCategoryService.updateGameCategoryStatus(gameCategory.game_categorie_id, newStatus).subscribe({
+      next: (res: BaseResponse<any>) => {
+        this.commonService.hideSpinner();
+        if (res.status.code === 0) {
+          this.commonService.manageStatus(res.status);
+          this.GetGameCategories();
+        } else {
+          this.commonService.manageStatus(res.status);
+        }
+      },
+      error: (err) => {
+        this.commonService.hideSpinner();
+        this.toastr.error(err.error?.message || 'Error occurred while updating game category status');
+      },
+    });
+  }
 }

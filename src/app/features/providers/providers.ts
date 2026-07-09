@@ -154,4 +154,24 @@ export class Providers implements OnInit {
       modalRef.close();
     });
   }
+
+  onToggleStatus(provider: ProviderList): void {
+    const newStatus = !provider.is_active;
+    this.commonService.showSpinner();
+    this.providerService.updateProviderStatus(provider.provider_id, newStatus).subscribe({
+      next: (res: BaseResponse<any>) => {
+        this.commonService.hideSpinner();
+        if (res.status.code === 0) {
+          this.commonService.manageStatus(res.status);
+          this.GetProviders();
+        } else {
+          this.commonService.manageStatus(res.status);
+        }
+      },
+      error: (err) => {
+        this.commonService.hideSpinner();
+        this.toastr.error(err.error?.message || 'Error occurred while updating provider status');
+      },
+    });
+  }
 }
