@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API } from '../constants/api-endpoints';
@@ -13,8 +13,8 @@ export class ProviderService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
 
-  getProviders(): Observable<BaseResponse<ProviderList[]>> {
-    return this.http.get<BaseResponse<ProviderList[]>>(`${this.baseUrl}${API.providers_api.get_providers}`);
+  getProviders(pagination?: any): Observable<BaseResponse<ProviderList[]>> {
+    return this.http.post<BaseResponse<ProviderList[]>>(`${this.baseUrl}${API.providers_api.get_providers}`, pagination || {});
   }
 
   getProviderById(id: number | string): Observable<BaseResponse<ProviderList>> {

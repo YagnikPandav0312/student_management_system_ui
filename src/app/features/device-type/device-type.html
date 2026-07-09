@@ -11,10 +11,11 @@
       <div class="search-box">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
         <input
-          type="text"
+          type="search"
           class="form-control"
           placeholder="Search device types..."
-          [(ngModel)]="searchQuery"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="onSearchChange($event)"
         />
       </div>
 
@@ -42,7 +43,7 @@
           <tbody>
             @for (deviceType of deviceTypes(); track deviceType.device_type_id; let i = $index) {
               <tr>
-                <td class="item-id d-none d-sm-table-cell">{{ i + 1 }}</td>
+                <td class="item-id d-none d-sm-table-cell">{{ showingFrom() + i }}</td>
                 <td>
                   <span class="item-name">{{ deviceType.device_type_name }}</span>
                 </td>
@@ -74,6 +75,21 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Pagination -->
+      <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2 px-3 pb-3">
+        <span class="text-muted small">
+          Showing {{ showingFrom() }} to {{ showingTo() }} of {{ totalItems() }} entries
+        </span>
+        <ngb-pagination
+          [collectionSize]="totalItems()"
+          [page]="currentPage()"
+          [pageSize]="pageSize()"
+          [maxSize]="5"
+          [boundaryLinks]="true"
+          (pageChange)="onPageChange($event)">
+        </ngb-pagination>
+      </div>
     } @else {
       <div class="empty-state-container text-center py-5">
         <div class="empty-state-icon mb-3">
@@ -84,8 +100,7 @@
           {{
             searchQuery()
               ? 'No device types match your search query.'
-              : 'Get started by creating your very first device
-        type.'
+              : 'Get started by creating your very first device type.'
           }}
         </p>
         @if (!searchQuery()) {

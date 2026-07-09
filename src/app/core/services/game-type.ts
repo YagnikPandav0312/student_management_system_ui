@@ -13,8 +13,8 @@ export class GameTypeService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
 
-  getGameTypes(): Observable<BaseResponse<GameTypeList[]>> {
-    return this.http.get<BaseResponse<GameTypeList[]>>(`${this.baseUrl}${API.game_type_api.get_game_type}`);
+  getGameTypes(pagination?: any): Observable<BaseResponse<GameTypeList[]>> {
+    return this.http.post<BaseResponse<GameTypeList[]>>(`${this.baseUrl}${API.game_type_api.get_game_type}`, pagination || {});
   }
 
   getGameTypeById(id: number | string): Observable<BaseResponse<GameTypeList>> {

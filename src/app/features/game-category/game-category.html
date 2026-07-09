@@ -10,7 +10,7 @@
       <!-- Search Input -->
       <div class="search-box">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" class="form-control" placeholder="Search game categories..." [(ngModel)]="searchQuery" />
+        <input type="search" class="form-control" placeholder="Search game categories..." [ngModel]="searchQuery()" (ngModelChange)="onSearchChange($event)" />
       </div>
 
       <!-- Add Button -->
@@ -23,7 +23,7 @@
   <!-- Content Card -->
   <div class="content-card">
     <!-- Table View -->
-    @if (filteredGameCategories().length > 0) {
+    @if (gameCategories().length > 0) {
     <div class="table-responsive">
       <table class="table custom-table align-middle">
         <thead>
@@ -35,9 +35,9 @@
           </tr>
         </thead>
         <tbody>
-          @for (gameCategory of filteredGameCategories(); track gameCategory.game_categorie_id; let i = $index) {
+          @for (gameCategory of gameCategories(); track gameCategory.game_categorie_id; let i = $index) {
           <tr>
-            <td class="item-id d-none d-sm-table-cell">{{ i + 1 }}</td>
+            <td class="item-id d-none d-sm-table-cell">{{ showingFrom() + i }}</td>
             <td>
               <span class="item-name">{{ gameCategory.game_categorie_name }}</span>
             </td>
@@ -58,6 +58,21 @@
           }
         </tbody>
       </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2 px-3 pb-3">
+      <span class="text-muted small">
+        Showing {{ showingFrom() }} to {{ showingTo() }} of {{ totalItems() }} entries
+      </span>
+      <ngb-pagination
+        [collectionSize]="totalItems()"
+        [page]="currentPage()"
+        [pageSize]="pageSize()"
+        [maxSize]="5"
+        [boundaryLinks]="true"
+        (pageChange)="onPageChange($event)">
+      </ngb-pagination>
     </div>
     } @else {
     <div class="empty-state-container text-center py-5">

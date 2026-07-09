@@ -1,51 +1,77 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GameCategoryService } from '../../core/services/game-category';
 import { Common } from '../../core/services/common';
 import { ToastrService } from 'ngx-toastr';
 import { AddEditGameCategory } from './add-edit-game-category/add-edit-game-category';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Confirm } from '../../shared/component/confirm/confirm';
 import { BaseResponse } from '../../model/api.model';
 import { GameCategoryList } from '../../model/game-category.model';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-game-category',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgbPaginationModule],
   templateUrl: './game-category.html',
   styleUrl: './game-category.scss',
 })
 export class GameCategory implements OnInit {
   gameCategories = signal<GameCategoryList[]>([]);
   searchQuery = signal<string>('');
+  currentPage = signal<number>(1);
+  pageSize = signal<number>(10);
+  totalItems = signal<number>(0);
+
+  showingFrom = computed(() => {
+    if (this.gameCategories().length === 0) return 0;
+    return (this.currentPage() - 1) * this.pageSize() + 1;
+  });
+  showingTo = computed(() => {
+    return Math.min(this.currentPage() * this.pageSize(), this.totalItems());
+  });
 
   private gameCategoryService = inject(GameCategoryService);
   private commonService = inject(Common);
   private toastr = inject(ToastrService);
   private modalService = inject(NgbModal);
+  private destroyRef = inject(DestroyRef);
 
-  filteredGameCategories = computed(() => {
-    const query = this.searchQuery().toLowerCase().trim();
-    if (!query) return this.gameCategories();
-    return this.gameCategories().filter(c => 
-      c.game_categorie_name.toLowerCase().includes(query) ||
-      (c.slug && c.slug.toLowerCase().includes(query))
-    );
-  });
+  private searchSubject = new Subject<string>();
 
-  ngOnInit(): void {
-    this.loadGameCategories();
+  constructor() {
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(query => {
+      this.searchQuery.set(query);
+      this.currentPage.set(1);
+      this.GetGameCategories();
+    });
   }
 
-  loadGameCategories(): void {
+  ngOnInit(): void {
+    this.GetGameCategories();
+  }
+
+  GetGameCategories(): void {
     this.commonService.showSpinner();
-    this.gameCategoryService.getGameCategories().subscribe({
+    const pagination: any = {
+      page: this.currentPage(),
+      limit: this.pageSize(),
+      search: this.searchQuery()?.trim() || '',
+    };
+    this.gameCategoryService.getGameCategories(pagination).subscribe({
       next: (res: BaseResponse<GameCategoryList[]>) => {
         this.commonService.hideSpinner();
         if (res.status.code === 0) {
           this.gameCategories.set(res.data || []);
+          this.totalItems.set(res.total_records || 0);
           this.commonService.hideSpinner();
         } else {
           this.commonService.manageStatus(res.status);
@@ -59,6 +85,15 @@ export class GameCategory implements OnInit {
     });
   }
 
+  onSearchChange(query: string): void {
+    this.searchSubject.next(query);
+  }
+
+  onPageChange(p: number): void {
+    this.currentPage.set(p);
+    this.GetGameCategories();
+  }
+
   openFormModal(item?: GameCategoryList): void {
     const modalRef = this.modalService.open(AddEditGameCategory, {
       centered: true,
@@ -68,7 +103,7 @@ export class GameCategory implements OnInit {
     modalRef.componentInstance.gameCategory = item;
     modalRef.componentInstance.close.subscribe((isSaved?: boolean) => {
       if (isSaved) {
-        this.loadGameCategories();
+        this.GetGameCategories();
       }
       modalRef.close();
     });
@@ -89,8 +124,11 @@ export class GameCategory implements OnInit {
           next: (res: BaseResponse<any>) => {
             this.commonService.hideSpinner();
             if (res.status.code === 0) {
-              this.loadGameCategories();
               this.commonService.manageStatus(res.status);
+              if (this.gameCategories().length === 1 && this.currentPage() > 1) {
+                this.currentPage.update(p => p - 1);
+              }
+              this.GetGameCategories();
               this.commonService.hideSpinner();
             } else {
               this.commonService.manageStatus(res.status);

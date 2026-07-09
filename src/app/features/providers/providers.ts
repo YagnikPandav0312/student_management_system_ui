@@ -1,40 +1,59 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProviderService } from '../../core/services/provider';
 import { Common } from '../../core/services/common';
 import { ToastrService } from 'ngx-toastr';
 import { AddEditProviders } from './add-edit-providers/add-edit-providers';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Confirm } from '../../shared/component/confirm/confirm';
 import { BaseResponse } from '../../model/api.model';
 import { ProviderList } from '../../model/provider.model';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-providers',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgbPaginationModule],
   templateUrl: './providers.html',
   styleUrl: './providers.scss',
 })
 export class Providers implements OnInit {
   providers = signal<ProviderList[]>([]);
   searchQuery = signal<string>('');
-  selectedProvider = signal<ProviderList | null>(null);
+  currentPage = signal<number>(1);
+  pageSize = signal<number>(10);
+  totalItems = signal<number>(0);
+
+  showingFrom = computed(() => {
+    if (this.providers().length === 0) return 0;
+    return (this.currentPage() - 1) * this.pageSize() + 1;
+  });
+  showingTo = computed(() => {
+    return Math.min(this.currentPage() * this.pageSize(), this.totalItems());
+  });
 
   private providerService = inject(ProviderService);
   private commonService = inject(Common);
   private toastr = inject(ToastrService);
   private modalService = inject(NgbModal);
+  private destroyRef = inject(DestroyRef);
 
-  filteredProviders = computed(() => {
-    const query = this.searchQuery().toLowerCase().trim();
-    if (!query) return this.providers();
-    return this.providers().filter(p => 
-      p.provider_name.toLowerCase().includes(query) ||
-      (p.slug && p.slug.toLowerCase().includes(query))
-    );
-  });
+  private searchSubject = new Subject<string>();
+
+  constructor() {
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(query => {
+      this.searchQuery.set(query);
+      this.currentPage.set(1);
+      this.GetProviders();
+    });
+  }
 
   getLogoUrl(logoPath: string | null | undefined): string | null {
     if (!logoPath) return null;
@@ -49,16 +68,22 @@ export class Providers implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadProviders();
+    this.GetProviders();
   }
 
-  loadProviders(): void {
+  GetProviders(): void {
     this.commonService.showSpinner();
-    this.providerService.getProviders().subscribe({
+    const pagination: any = {
+      page: this.currentPage(),
+      limit: this.pageSize(),
+      search: this.searchQuery()?.trim() || '',
+    };
+    this.providerService.getProviders(pagination).subscribe({
       next: (res: BaseResponse<ProviderList[]>) => {
         this.commonService.hideSpinner();
         if (res.status.code === 0) {
           this.providers.set(res.data || []);
+          this.totalItems.set(res.total_records || 0);
           this.commonService.hideSpinner();
         } else {
           this.commonService.manageStatus(res.status);
@@ -72,6 +97,15 @@ export class Providers implements OnInit {
     });
   }
 
+  onSearchChange(query: string): void {
+    this.searchSubject.next(query);
+  }
+
+  onPageChange(p: number): void {
+    this.currentPage.set(p);
+    this.GetProviders();
+  }
+
   openFormModal(item?: ProviderList): void {
     const modalRef = this.modalService.open(AddEditProviders, {
       centered: true,
@@ -81,7 +115,7 @@ export class Providers implements OnInit {
     modalRef.componentInstance.provider = item;
     modalRef.componentInstance.close.subscribe((isSaved?: boolean) => {
       if (isSaved) {
-        this.loadProviders();
+        this.GetProviders();
       }
       modalRef.close();
     });
@@ -103,7 +137,10 @@ export class Providers implements OnInit {
             this.commonService.hideSpinner();
             if (res.status.code === 0) {
               this.commonService.manageStatus(res.status);
-              this.loadProviders();
+              if (this.providers().length === 1 && this.currentPage() > 1) {
+                this.currentPage.update(p => p - 1);
+              }
+              this.GetProviders();
             } else {
               this.commonService.manageStatus(res.status);
             }

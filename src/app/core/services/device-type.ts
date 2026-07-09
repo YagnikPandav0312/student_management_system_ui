@@ -13,8 +13,8 @@ export class DeviceTypeService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
 
-  getDeviceTypes(): Observable<BaseResponse<DeviceTypeList[]>> {
-    return this.http.get<BaseResponse<DeviceTypeList[]>>(`${this.baseUrl}${API.device_type_api.get_device_type}`);
+  getDeviceTypes(pagination?: any): Observable<BaseResponse<DeviceTypeList[]>> {
+    return this.http.post<BaseResponse<DeviceTypeList[]>>(`${this.baseUrl}${API.device_type_api.get_device_type}`, pagination || {});
   }
 
   getDeviceTypeById(id: number | string): Observable<BaseResponse<DeviceTypeList>> {

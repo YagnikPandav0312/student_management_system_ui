@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GameService } from '../../core/services/game';
@@ -9,9 +9,11 @@ import { DeviceTypeService } from '../../core/services/device-type';
 import { Common } from '../../core/services/common';
 import { ToastrService } from 'ngx-toastr';
 import { AddEditGame } from './add-edit-game/add-edit-game';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Confirm } from '../../shared/component/confirm/confirm';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BaseResponse } from '../../model/api.model';
 import { GameList } from '../../model/game.model';
 import { ProviderList } from '../../model/provider.model';
@@ -22,13 +24,24 @@ import { DeviceTypeList } from '../../model/device-type.model';
 @Component({
   selector: 'app-games',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgbPaginationModule],
   templateUrl: './games.html',
   styleUrl: './games.scss',
 })
 export class Games implements OnInit {
   games = signal<GameList[]>([]);
   searchQuery = signal<string>('');
+  currentPage = signal<number>(1);
+  pageSize = signal<number>(10);
+  totalItems = signal<number>(0);
+
+  showingFrom = computed(() => {
+    if (this.games().length === 0) return 0;
+    return (this.currentPage() - 1) * this.pageSize() + 1;
+  });
+  showingTo = computed(() => {
+    return Math.min(this.currentPage() * this.pageSize(), this.totalItems());
+  });
 
   providers = signal<ProviderList[]>([]);
   categories = signal<GameCategoryList[]>([]);
@@ -48,27 +61,30 @@ export class Games implements OnInit {
   private commonService = inject(Common);
   private toastr = inject(ToastrService);
   private modalService = inject(NgbModal);
+  private destroyRef = inject(DestroyRef);
 
-  filteredGames = computed(() => {
-    const query = this.searchQuery().toLowerCase().trim();
-    if (!query) return this.games();
-    return this.games().filter(g => 
-      (g.game_name && g.game_name.toLowerCase().includes(query)) ||
-      (g.slug && g.slug.toLowerCase().includes(query)) ||
-      (this.getProviderName(g.provider_id).toLowerCase().includes(query)) ||
-      (this.getGameTypeName(g.game_type_id).toLowerCase().includes(query)) ||
-      (this.getDeviceTypeName(g.device_type_id).toLowerCase().includes(query))
-    );
-  });
+  private searchSubject = new Subject<string>();
 
-  ngOnInit(): void {
-    this.loadLookupsAndGames();
+  constructor() {
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(query => {
+      this.searchQuery.set(query);
+      this.currentPage.set(1);
+      this.GetGames();
+    });
   }
 
-  loadLookupsAndGames(): void {
+  ngOnInit(): void {
+    this.GetGames();
+  }
+
+  GetGames(): void {
     this.commonService.showSpinner();
     forkJoin({
-      providers: this.providerService.getProviders(),
+      providers: this.providerService.getProviders({}),
       categories: this.gameCategoryService.getGameCategories(),
       gameTypes: this.gameTypeService.getGameTypes(),
       deviceTypes: this.deviceTypeService.getDeviceTypes(),
@@ -101,11 +117,18 @@ export class Games implements OnInit {
   }
 
   loadGames(): void {
-    this.gameService.getGames().subscribe({
+    this.commonService.showSpinner();
+    const pagination: any = {
+      page: this.currentPage(),
+      limit: this.pageSize(),
+      search: this.searchQuery()?.trim() || '',
+    };
+    this.gameService.getGames(pagination).subscribe({
       next: (res: BaseResponse<GameList[]>) => {
         this.commonService.hideSpinner();
         if (res.status.code === 0) {
           this.games.set(res.data || []);
+          this.totalItems.set(res.total_records || 0);
         } else {
           this.commonService.manageStatus(res.status);
         }
@@ -115,6 +138,15 @@ export class Games implements OnInit {
         this.toastr.error(err.error?.message || 'Error occurred while loading games');
       },
     });
+  }
+
+  onSearchChange(query: string): void {
+    this.searchSubject.next(query);
+  }
+
+  onPageChange(p: number): void {
+    this.currentPage.set(p);
+    this.loadGames();
   }
 
   getProviderName(id: number): string {
@@ -146,10 +178,10 @@ export class Games implements OnInit {
     modalRef.componentInstance.categories = this.categories();
     modalRef.componentInstance.gameTypes = this.gameTypes();
     modalRef.componentInstance.deviceTypes = this.deviceTypes();
-    
+
     modalRef.componentInstance.close.subscribe((isSaved?: boolean) => {
       if (isSaved) {
-        this.loadLookupsAndGames();
+        this.GetGames();
       }
       modalRef.close();
     });
@@ -171,7 +203,10 @@ export class Games implements OnInit {
             this.commonService.hideSpinner();
             if (res.status.code === 0) {
               this.commonService.manageStatus(res.status);
-              this.loadLookupsAndGames();
+              if (this.games().length === 1 && this.currentPage() > 1) {
+                this.currentPage.update(p => p - 1);
+              }
+              this.GetGames();
             } else {
               this.commonService.manageStatus(res.status);
             }

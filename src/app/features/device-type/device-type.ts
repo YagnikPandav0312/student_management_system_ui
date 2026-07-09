@@ -1,42 +1,77 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DeviceTypeService } from '../../core/services/device-type';
 import { Common } from '../../core/services/common';
 import { ToastrService } from 'ngx-toastr';
 import { AddEditDeviceType } from './add-edit-device-type/add-edit-device-type';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Confirm } from '../../shared/component/confirm/confirm';
 import { BaseResponse } from '../../model/api.model';
 import { DeviceTypeList } from '../../model/device-type.model';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-device-type',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgbPaginationModule],
   templateUrl: './device-type.html',
   styleUrl: './device-type.scss',
 })
 export class DeviceType implements OnInit {
   deviceTypes = signal<DeviceTypeList[]>([]);
   searchQuery = signal<string>('');
+  currentPage = signal<number>(1);
+  pageSize = signal<number>(10);
+  totalItems = signal<number>(0);
+
+  showingFrom = computed(() => {
+    if (this.deviceTypes().length === 0) return 0;
+    return (this.currentPage() - 1) * this.pageSize() + 1;
+  });
+  showingTo = computed(() => {
+    return Math.min(this.currentPage() * this.pageSize(), this.totalItems());
+  });
 
   private deviceTypeService = inject(DeviceTypeService);
   private commonService = inject(Common);
   private toastr = inject(ToastrService);
   private modalService = inject(NgbModal);
+  private destroyRef = inject(DestroyRef);
 
-  ngOnInit(): void {
-    this.getDesviceTypeList();
+  private searchSubject = new Subject<string>();
+
+  constructor() {
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(query => {
+      this.searchQuery.set(query);
+      this.currentPage.set(1);
+      this.GetDesviceTypeList();
+    });
   }
 
-  getDesviceTypeList(): void {
+  ngOnInit(): void {
+    this.GetDesviceTypeList();
+  }
+
+  GetDesviceTypeList(): void {
     this.commonService.showSpinner();
-    this.deviceTypeService.getDeviceTypes().subscribe({
+    const pagination: any = {
+      page: this.currentPage(),
+      limit: this.pageSize(),
+      search: this.searchQuery()?.trim() || '',
+    };
+    this.deviceTypeService.getDeviceTypes(pagination).subscribe({
       next: (res: BaseResponse<DeviceTypeList[]>) => {
         this.commonService.hideSpinner();
         if (res.status.code === 0) {
           this.deviceTypes.set(res.data || []);
+          this.totalItems.set(res.total_records || 0);
           this.commonService.hideSpinner();
         } else {
           this.commonService.manageStatus(res.status);
@@ -50,6 +85,15 @@ export class DeviceType implements OnInit {
     });
   }
 
+  onSearchChange(query: string): void {
+    this.searchSubject.next(query);
+  }
+
+  onPageChange(p: number): void {
+    this.currentPage.set(p);
+    this.GetDesviceTypeList();
+  }
+
   openFormModal(item?: any): void {
     const modalRef = this.modalService.open(AddEditDeviceType, {
       centered: true,
@@ -59,7 +103,7 @@ export class DeviceType implements OnInit {
     modalRef.componentInstance.deviceType = item;
     modalRef.componentInstance.close.subscribe((isSaved?: boolean) => {
       if (isSaved) {
-        this.getDesviceTypeList();
+        this.GetDesviceTypeList();
       }
       modalRef.close();
     });
@@ -80,8 +124,11 @@ export class DeviceType implements OnInit {
           next: (res: BaseResponse<any>) => {
             this.commonService.hideSpinner();
             if (res.status.code === 0) {
-              this.getDesviceTypeList();
               this.commonService.manageStatus(res.status);
+              if (this.deviceTypes().length === 1 && this.currentPage() > 1) {
+                this.currentPage.update(p => p - 1);
+              }
+              this.GetDesviceTypeList();
               this.commonService.hideSpinner();
             } else {
               this.commonService.manageStatus(res.status);
