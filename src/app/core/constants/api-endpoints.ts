@@ -38,5 +38,8 @@ export const API = {
         update_game: '/games/update_game',
         delete_game: '/games/delete_game',
         update_game_status: '/games/update_game_status',
+    },
+    dashboard_api: {
+        get_statistics: '/dashboard/statistics',
     }
 }

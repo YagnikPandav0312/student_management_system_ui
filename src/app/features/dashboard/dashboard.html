@@ -1,1 +1,180 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+  <!-- Welcome Banner -->
+  <div class="welcome-banner mb-4">
+    <div class="banner-content">
+      <h1 class="welcome-title">Welcome back, <span class="highlight-text">{{ fullName() }}</span>!</h1>
+      <p class="welcome-subtitle">Here is the latest overview of your games catalog system.</p>
+    </div>
+    <div class="banner-badge d-none d-md-flex align-items-center gap-2">
+      <i class="fa-solid fa-calendar-days text-primary"></i>
+      <span class="small font-weight-bold text-muted">{{ today | date:'mediumDate' }}</span>
+    </div>
+  </div>
+
+  @if (statistics()) {
+    <!-- Statistics Grid -->
+    <div class="row g-4 mb-5">
+      <!-- Total Games Card -->
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card card-games">
+          <div class="card-inner">
+            <div class="stat-details">
+              <span class="stat-label">Total Games</span>
+              <h2 class="stat-number">{{ statistics()?.total_games || 0 }}</h2>
+            </div>
+            <div class="stat-icon-wrapper">
+              <i class="fa-solid fa-gamepad"></i>
+            </div>
+          </div>
+          <div class="card-footer-info text-muted">
+            <i class="fa-solid fa-chart-line me-1"></i> Catalogued games list
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Games Card -->
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card card-active">
+          <div class="card-inner">
+            <div class="stat-details">
+              <span class="stat-label">Active Games</span>
+              <h2 class="stat-number">
+                {{ statistics()?.total_active_games || 0 }}
+                <span class="small-ratio">({{ activePercentage() }}%)</span>
+              </h2>
+            </div>
+            <div class="stat-icon-wrapper">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+          </div>
+          <!-- Progress bar -->
+          <div class="progress-container mt-2">
+            <div class="progress-bar-fill" [style.width.%]="activePercentage()"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Providers Card -->
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card card-providers">
+          <div class="card-inner">
+            <div class="stat-details">
+              <span class="stat-label">Total Providers</span>
+              <h2 class="stat-number">{{ statistics()?.total_providers || 0 }}</h2>
+            </div>
+            <div class="stat-icon-wrapper">
+              <i class="fa-solid fa-handshake"></i>
+            </div>
+          </div>
+          <div class="card-footer-info text-muted">
+            <i class="fa-solid fa-network-wired me-1"></i> Active providers integration
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Categories Card -->
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card card-categories">
+          <div class="card-inner">
+            <div class="stat-details">
+              <span class="stat-label">Total Categories</span>
+              <h2 class="stat-number">{{ statistics()?.total_categories || 0 }}</h2>
+            </div>
+            <div class="stat-icon-wrapper">
+              <i class="fa-solid fa-folder-open"></i>
+            </div>
+          </div>
+          <div class="card-footer-info text-muted">
+            <i class="fa-solid fa-tags me-1"></i> Games taxonomies
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Action Links -->
+    <div class="actions-section">
+      <h3 class="section-title mb-4">Quick Management Actions</h3>
+      <div class="row g-4">
+        <!-- Game Management Action -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <a routerLink="/games" class="action-card-link">
+            <div class="action-card">
+              <div class="action-icon bg-primary-soft">
+                <i class="fa-solid fa-gamepad text-primary"></i>
+              </div>
+              <div class="action-text">
+                <h5>Games</h5>
+                <p class="text-muted">Manage games & bet ranges</p>
+              </div>
+              <div class="action-arrow">
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Provider Management Action -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <a routerLink="/providers" class="action-card-link">
+            <div class="action-card">
+              <div class="action-icon bg-success-soft">
+                <i class="fa-solid fa-handshake text-success"></i>
+              </div>
+              <div class="action-text">
+                <h5>Providers</h5>
+                <p class="text-muted">Manage game providers & logos</p>
+              </div>
+              <div class="action-arrow">
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Category Management Action -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <a routerLink="/game-category" class="action-card-link">
+            <div class="action-card">
+              <div class="action-icon bg-warning-soft">
+                <i class="fa-solid fa-folder-open text-warning"></i>
+              </div>
+              <div class="action-text">
+                <h5>Categories</h5>
+                <p class="text-muted">Manage classification categories</p>
+              </div>
+              <div class="action-arrow">
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Game Type Management Action -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <a routerLink="/game-type" class="action-card-link">
+            <div class="action-card">
+              <div class="action-icon bg-info-soft">
+                <i class="fa-solid fa-circle-nodes text-info"></i>
+              </div>
+              <div class="action-text">
+                <h5>Game Types</h5>
+                <p class="text-muted">Manage different game type classifications</p>
+              </div>
+              <div class="action-arrow">
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <!-- Loading state / skeleton -->
+    <div class="loading-state text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading dashboard...</span>
+      </div>
+      <p class="text-muted mt-3">Fetching latest dashboard metrics...</p>
+    </div>
+  }
+</div>

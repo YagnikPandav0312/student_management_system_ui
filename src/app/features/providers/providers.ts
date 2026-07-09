@@ -26,7 +26,8 @@ export class Providers implements OnInit {
   currentPage = signal<number>(1);
   pageSize = signal<number>(10);
   totalItems = signal<number>(0);
-
+  sort_by = signal<string>('provider_id');
+  sort_order = signal<string>('desc');
   showingFrom = computed(() => {
     if (this.providers().length === 0) return 0;
     return (this.currentPage() - 1) * this.pageSize() + 1;
@@ -77,6 +78,8 @@ export class Providers implements OnInit {
       page: this.currentPage(),
       limit: this.pageSize(),
       search: this.searchQuery()?.trim() || '',
+      sort_by: this.sort_by(),
+      sort_order: this.sort_order()
     };
     this.providerService.getProviders(pagination).subscribe({
       next: (res: BaseResponse<ProviderList[]>) => {
@@ -173,5 +176,15 @@ export class Providers implements OnInit {
         this.toastr.error(err.error?.message || 'Error occurred while updating provider status');
       },
     });
+  }
+
+  sort(column: string) {
+    if (this.sort_by() === column) {
+      this.sort_order.update(sort_order => sort_order === 'asc' ? 'desc' : 'asc');
+    } else {
+      this.sort_by.set(column);
+      this.sort_order.set('asc');
+    }
+    this.GetProviders();
   }
 }

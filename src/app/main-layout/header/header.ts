@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Common } from '../../core/services/common';
@@ -12,11 +12,31 @@ import { Confirm } from '../../shared/component/confirm/confirm';
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
-export class Header {
+export class Header implements OnInit {
   public modelService = inject(NgbModal);
   private router = inject(Router);
   private toastr = inject(ToastrService);
   public commonService = inject(Common);
+
+  fullName = signal<string>('');
+  avatarLetter = computed(() => {
+    const name = this.fullName();
+    return name ? name.charAt(0).toUpperCase() : '';
+  });
+
+  ngOnInit(): void {
+    try {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        if (user && user.full_name) {
+          this.fullName.set(user.full_name);
+        }
+      }
+    } catch (e) {
+      console.error('Failed to parse user details in header', e);
+    }
+  }
 
   logOut() {
     const modalRef = this.modelService.open(Confirm, {
