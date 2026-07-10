@@ -7,7 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AddEditProviders } from './add-edit-providers/add-edit-providers';
 import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Confirm } from '../../shared/component/confirm/confirm';
-import { BaseResponse } from '../../model/api.model';
+import { BaseResponse, getPayloadReq } from '../../model/api.model';
 import { ProviderList } from '../../model/provider.model';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -44,15 +44,13 @@ export class Providers implements OnInit {
   private searchSubject = new Subject<string>();
 
   constructor() {
-    this.searchSubject.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(query => {
-      this.searchQuery.set(query);
-      this.currentPage.set(1);
-      this.GetProviders();
-    });
+    this.searchSubject
+      .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .subscribe((query) => {
+        this.searchQuery.set(query);
+        this.currentPage.set(1);
+        this.GetProviders();
+      });
   }
 
   ngOnInit(): void {
@@ -61,14 +59,15 @@ export class Providers implements OnInit {
 
   GetProviders(): void {
     this.commonService.showSpinner();
-    const pagination: any = {
+    const payload: getPayloadReq = {
       page: this.currentPage(),
       limit: this.pageSize(),
       search: this.searchQuery()?.trim() || '',
       sort_by: this.sort_by(),
-      sort_order: this.sort_order()
+      sort_order: this.sort_order(),
+      user_id: this.commonService.getUserId() || 0,
     };
-    this.providerService.getProviders(pagination).subscribe({
+    this.providerService.getProviders(payload).subscribe({
       next: (res: BaseResponse<ProviderList[]>) => {
         this.commonService.hideSpinner();
         if (res.status.code === 0) {
@@ -122,13 +121,17 @@ export class Providers implements OnInit {
     modalRef.componentInstance.onClose.subscribe((returnData: any) => {
       if (returnData) {
         this.commonService.showSpinner();
-        this.providerService.deleteProvider(provider.provider_id).subscribe({
+        const paylaod: any = {
+          provider_id: provider.provider_id,
+          user_id: this.commonService.getUserId() || 0,
+        };
+        this.providerService.deleteProvider(paylaod).subscribe({
           next: (res: BaseResponse<any>) => {
             this.commonService.hideSpinner();
             if (res.status.code === 0) {
               this.commonService.manageStatus(res.status);
               if (this.providers().length === 1 && this.currentPage() > 1) {
-                this.currentPage.update(p => p - 1);
+                this.currentPage.update((p) => p - 1);
               }
               this.GetProviders();
             } else {
@@ -146,9 +149,13 @@ export class Providers implements OnInit {
   }
 
   onToggleStatus(provider: ProviderList): void {
-    const newStatus = !provider.is_active;
     this.commonService.showSpinner();
-    this.providerService.updateProviderStatus(provider.provider_id, newStatus).subscribe({
+    const payload: any = {
+      provider_id: provider.provider_id,
+      status: !provider.is_active,
+      user_id: this.commonService.getUserId(),
+    };
+    this.providerService.updateProviderStatus(payload).subscribe({
       next: (res: BaseResponse<any>) => {
         this.commonService.hideSpinner();
         if (res.status.code === 0) {
@@ -167,7 +174,7 @@ export class Providers implements OnInit {
 
   sort(column: string) {
     if (this.sort_by() === column) {
-      this.sort_order.update(sort_order => sort_order === 'ASC' ? 'DESC' : 'ASC');
+      this.sort_order.update((sort_order) => (sort_order === 'ASC' ? 'DESC' : 'ASC'));
     } else {
       this.sort_by.set(column);
       this.sort_order.set('ASC');

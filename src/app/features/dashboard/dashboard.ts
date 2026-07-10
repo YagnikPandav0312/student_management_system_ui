@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DashboardService } from '../../core/services/dashboard';
 import { Common } from '../../core/services/common';
 import { DashboardStatistics } from '../../model/dashboard.model';
-import { BaseResponse } from '../../model/api.model';
+import { BaseResponse, getPayloadReq } from '../../model/api.model';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -48,7 +48,10 @@ export class Dashboard implements OnInit {
 
   getStatistics(): void {
     this.commonService.showSpinner();
-    this.dashboardService.getStatistics().subscribe({
+    const payload: getPayloadReq = {
+      user_id: this.commonService.getUserId() || 0,
+    };
+    this.dashboardService.getStatistics(payload).subscribe({
       next: (res: BaseResponse<DashboardStatistics>) => {
         this.commonService.hideSpinner();
         if (res.status.code === 0) {

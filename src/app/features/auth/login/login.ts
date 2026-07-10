@@ -25,7 +25,7 @@ export class Login {
     private fb: FormBuilder,
     private authService: Auth,
     private router: Router,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     if (localStorage.getItem('token')) {
@@ -59,6 +59,16 @@ export class Login {
           localStorage.setItem('isLoggedIn', 'true');
           localStorage.setItem('token', res.data.token);
           localStorage.setItem('user', JSON.stringify(res.data.user));
+          this.commonService.userData.set({
+            user_id: res.data.user.user_id,
+          });
+          if (this.commonService.userData()?.user_id) {
+            this.commonService.setUserId(Number(this.commonService.userData()?.user_id));
+            localStorage.setItem(
+              'userId',
+              String(this.commonService.userData()?.user_id.toString()),
+            );
+          }
           this.router.navigate(['/dashboard']);
           this.submitted.set(false);
           this.commonService.hideSpinner();
@@ -74,25 +84,5 @@ export class Login {
         this.submitted.set(false);
       },
     });
-  }
-
-  redirectUser(roleId: number) {
-    switch (roleId) {
-      case 1:
-        this.router.navigate(['/admin/dashboard']);
-        break;
-
-      case 2:
-        this.router.navigate(['/teacher/dashboard']);
-        break;
-
-      case 3:
-        this.router.navigate(['/student/dashboard']);
-        break;
-
-      default:
-        this.router.navigate(['/login']);
-        break;
-    }
   }
 }

@@ -34,15 +34,17 @@ export class AddEditProviders implements OnInit {
     if (this.provider) {
       this.isEditMode.set(true);
       this.form.patchValue({
+        provider_id :this.provider.provider_id,
         provider_name: this.provider.provider_name,
         slug: this.provider.slug || '',
+        user_id: String (this.commonService.getUserId()),
       });
       if (this.provider.logo) {
         if (this.provider.logo.startsWith('http') || this.provider.logo.startsWith('data:')) {
           this.logoPreview.set(this.provider.logo);
         } else {
           this.logoPreview.set(`${this.provider.logo}`);
-        } 
+        }
       } else {
         this.logoPreview.set(null);
       }
@@ -63,7 +65,7 @@ export class AddEditProviders implements OnInit {
     this.selectedFile = null;
 
     // Auto-generate slug from name if not in edit mode
-    this.form.get('provider_name')?.valueChanges.subscribe(name => {
+    this.form.get('provider_name')?.valueChanges.subscribe((name) => {
       if (!this.isEditMode() && name) {
         const slug = this.slugify(name);
         this.form.get('slug')?.setValue(slug, { emitEvent: false });
@@ -76,11 +78,11 @@ export class AddEditProviders implements OnInit {
       .toString()
       .toLowerCase()
       .trim()
-      .replace(/\s+/g, '-')           // Replace spaces with -
-      .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
-      .replace(/\-\-+/g, '-')         // Replace multiple - with single -
-      .replace(/^-+/, '')             // Trim - from start
-      .replace(/-+$/, '');            // Trim - from end
+      .replace(/\s+/g, '-') // Replace spaces with -
+      .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+      .replace(/\-\-+/g, '-') // Replace multiple - with single -
+      .replace(/^-+/, '') // Trim - from start
+      .replace(/-+$/, ''); // Trim - from end
   }
 
   get f() {
@@ -107,8 +109,12 @@ export class AddEditProviders implements OnInit {
     }
 
     const formData = new FormData();
+    if(this.isEditMode()){
+      formData.append('provider_id', String(this.provider?.provider_id));
+    }
     formData.append('provider_name', this.form.get('provider_name')?.value);
     formData.append('slug', this.form.get('slug')?.value);
+    formData.append('user_id', String(this.commonService.getUserId()));
     if (this.selectedFile) {
       formData.append('logo', this.selectedFile);
     } else if (this.isEditMode() && this.provider!.logo) {
@@ -117,7 +123,7 @@ export class AddEditProviders implements OnInit {
 
     this.commonService.showSpinner();
     if (this.isEditMode()) {
-      this.providerService.updateProvider(this.provider!.provider_id, formData).subscribe({
+      this.providerService.updateProvider(formData).subscribe({
         next: (res: BaseResponse<ProviderList>) => {
           this.commonService.hideSpinner();
           if (res && res.status.code === 0) {
