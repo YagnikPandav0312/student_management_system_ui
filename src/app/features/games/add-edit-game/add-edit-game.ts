@@ -184,9 +184,14 @@ export class AddEditGame implements OnInit {
       formData.append('thumbnail', this.game!.thumbnail);
     }
 
+    formData.append('user_id', String(this.commonService.getUserId()));
+    if (this.isEditMode()) {
+      formData.append('game_id', String(this.game!.game_id));
+    }
+
     this.commonService.showSpinner();
     if (this.isEditMode()) {
-      this.gameService.updateGame(this.game!.game_id, formData).subscribe({
+      this.gameService.updateGame(formData).subscribe({
         next: (res: BaseResponse<GameList>) => {
           this.commonService.hideSpinner();
           if (res && res.status.code === 0) {

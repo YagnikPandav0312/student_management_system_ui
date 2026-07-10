@@ -86,10 +86,10 @@ export class Games implements OnInit {
   GetGames(): void {
     this.commonService.showSpinner();
     forkJoin({
-      providers: this.providerService.getProviders({}),
-      categories: this.gameCategoryService.getGameCategories(),
-      gameTypes: this.gameTypeService.getGameTypes(),
-      deviceTypes: this.deviceTypeService.getDeviceTypes(),
+      providers: this.providerService.getProviders({ user_id: this.commonService.getUserId() || 0 }),
+      categories: this.gameCategoryService.getGameCategories({ user_id: this.commonService.getUserId() || 0 }),
+      gameTypes: this.gameTypeService.getGameTypes({ user_id: this.commonService.getUserId() || 0 }),
+      deviceTypes: this.deviceTypeService.getDeviceTypes({ user_id: this.commonService.getUserId() || 0 }),
     }).subscribe({
       next: (res: any) => {
         if (res.providers && res.providers.status && res.providers.status.code === 0) {
@@ -125,7 +125,8 @@ export class Games implements OnInit {
       limit: this.pageSize(),
       search: this.searchQuery()?.trim() || '',
       sort_by: this.sort_by(),
-      sort_order: this.sort_order()
+      sort_order: this.sort_order(),
+      user_id: this.commonService.getUserId() || 0
     };
     this.gameService.getGames(pagination).subscribe({
       next: (res: BaseResponse<GameList[]>) => {
@@ -202,7 +203,11 @@ export class Games implements OnInit {
     modalRef.componentInstance.onClose.subscribe((returnData: any) => {
       if (returnData) {
         this.commonService.showSpinner();
-        this.gameService.deleteGame(game.game_id).subscribe({
+        const payload: any = {
+          game_id: game.game_id,
+          user_id: this.commonService.getUserId() || 0,
+        };
+        this.gameService.deleteGame(payload).subscribe({
           next: (res: BaseResponse<any>) => {
             this.commonService.hideSpinner();
             if (res.status.code === 0) {
@@ -226,9 +231,13 @@ export class Games implements OnInit {
   }
 
   onToggleStatus(game: GameList): void {
-    const newStatus = !game.is_active;
     this.commonService.showSpinner();
-    this.gameService.updateGameStatus(game.game_id, newStatus).subscribe({
+    const payload: any = {
+      game_id: game.game_id,
+      status: !game.is_active,
+      user_id: this.commonService.getUserId() || 0,
+    };
+    this.gameService.updateGameStatus(payload).subscribe({
       next: (res: BaseResponse<any>) => {
         this.commonService.hideSpinner();
         if (res.status.code === 0) {

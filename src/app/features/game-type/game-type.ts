@@ -68,7 +68,8 @@ export class GameType implements OnInit {
       limit: this.pageSize(),
       search: this.searchQuery()?.trim() || '',
       sort_by: this.sort_by(),
-      sort_order: this.sort_order()
+      sort_order: this.sort_order(),
+      user_id: this.commonService.getUserId() || 0
     };
     this.gameTypeService.getGameTypes(pagination).subscribe({
       next: (res: BaseResponse<GameTypeList[]>) => {
@@ -124,7 +125,11 @@ export class GameType implements OnInit {
     modalRef.componentInstance.onClose.subscribe((returnData: any) => {
       if (returnData) {
         this.commonService.showSpinner();
-        this.gameTypeService.deleteGameType(gameType.game_type_id).subscribe({
+        const payload: any = {
+          game_type_id: gameType.game_type_id,
+          user_id: this.commonService.getUserId() || 0,
+        };
+        this.gameTypeService.deleteGameType(payload).subscribe({
           next: (res: BaseResponse<any>) => {
             this.commonService.hideSpinner();
             if (res.status.code === 0) {
@@ -150,9 +155,13 @@ export class GameType implements OnInit {
   }
 
   onToggleStatus(gameType: GameTypeList): void {
-    const newStatus = !gameType.is_active;
     this.commonService.showSpinner();
-    this.gameTypeService.updateGameTypeStatus(gameType.game_type_id, newStatus).subscribe({
+    const payload: any = {
+      game_type_id: gameType.game_type_id,
+      status: !gameType.is_active,
+      user_id: this.commonService.getUserId() || 0,
+    };
+    this.gameTypeService.updateGameTypeStatus(payload).subscribe({
       next: (res: BaseResponse<any>) => {
         this.commonService.hideSpinner();
         if (res.status.code === 0) {

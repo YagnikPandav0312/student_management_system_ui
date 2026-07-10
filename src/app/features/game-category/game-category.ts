@@ -68,7 +68,8 @@ export class GameCategory implements OnInit {
       limit: this.pageSize(),
       search: this.searchQuery()?.trim() || '',
       sort_by: this.sort_by(),
-      sort_order: this.sort_order()
+      sort_order: this.sort_order(),
+      user_id: this.commonService.getUserId() || 0
     };
     this.gameCategoryService.getGameCategories(pagination).subscribe({
       next: (res: BaseResponse<GameCategoryList[]>) => {
@@ -124,7 +125,11 @@ export class GameCategory implements OnInit {
     modalRef.componentInstance.onClose.subscribe((returnData: any) => {
       if (returnData) {
         this.commonService.showSpinner();
-        this.gameCategoryService.deleteGameCategory(gameCategory.game_categorie_id).subscribe({
+        const payload: any = {
+          game_categorie_id: gameCategory.game_categorie_id,
+          user_id: this.commonService.getUserId() || 0,
+        };
+        this.gameCategoryService.deleteGameCategory(payload).subscribe({
           next: (res: BaseResponse<any>) => {
             this.commonService.hideSpinner();
             if (res.status.code === 0) {
@@ -150,9 +155,13 @@ export class GameCategory implements OnInit {
   }
 
   onToggleStatus(gameCategory: GameCategoryList): void {
-    const newStatus = !gameCategory.is_active;
     this.commonService.showSpinner();
-    this.gameCategoryService.updateGameCategoryStatus(gameCategory.game_categorie_id, newStatus).subscribe({
+    const payload: any = {
+      game_categorie_id: gameCategory.game_categorie_id,
+      status: !gameCategory.is_active,
+      user_id: this.commonService.getUserId() || 0,
+    };
+    this.gameCategoryService.updateGameCategoryStatus(payload).subscribe({
       next: (res: BaseResponse<any>) => {
         this.commonService.hideSpinner();
         if (res.status.code === 0) {

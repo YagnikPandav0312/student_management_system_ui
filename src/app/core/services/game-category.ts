@@ -25,15 +25,15 @@ export class GameCategoryService {
     return this.http.post<BaseResponse<GameCategoryList>>(`${this.baseUrl}${API.game_category_api.create_game_category}`, payload);
   }
 
-  updateGameCategory(id: number | string, payload: { game_categorie_name: string; slug: string }): Observable<BaseResponse<GameCategoryList>> {
-    return this.http.put<BaseResponse<GameCategoryList>>(`${this.baseUrl}${API.game_category_api.update_game_category}/${id}`, payload);
+  updateGameCategory(payload: any): Observable<BaseResponse<GameCategoryList>> {
+    return this.http.post<BaseResponse<GameCategoryList>>(`${this.baseUrl}${API.game_category_api.update_game_category}`, payload);
   }
 
-  deleteGameCategory(id: number | string): Observable<BaseResponse<any>> {
-    return this.http.delete<BaseResponse<any>>(`${this.baseUrl}${API.game_category_api.delete_game_category}/${id}`);
+  deleteGameCategory(payload: any): Observable<BaseResponse<any>> {
+    return this.http.post<BaseResponse<any>>(`${this.baseUrl}${API.game_category_api.delete_game_category}`, payload);
   }
 
-  updateGameCategoryStatus(id: number | string, status: boolean): Observable<BaseResponse<any>> {
-    return this.http.put<BaseResponse<any>>(`${this.baseUrl}${API.game_category_api.update_game_category_status}/${id}`, { is_active: status });
+  updateGameCategoryStatus(payload: any): Observable<BaseResponse<any>> {
+    return this.http.post<BaseResponse<any>>(`${this.baseUrl}${API.game_category_api.update_game_category_status}`, payload);
   }
 }

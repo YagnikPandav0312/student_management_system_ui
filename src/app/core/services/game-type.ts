@@ -25,15 +25,15 @@ export class GameTypeService {
     return this.http.post<BaseResponse<GameTypeList>>(`${this.baseUrl}${API.game_type_api.create_game_type}`, payload);
   }
 
-  updateGameType(id: number | string, payload: { game_types_name: string; slug: string }): Observable<BaseResponse<GameTypeList>> {
-    return this.http.put<BaseResponse<GameTypeList>>(`${this.baseUrl}${API.game_type_api.update_game_type}/${id}`, payload);
+  updateGameType(payload: any): Observable<BaseResponse<GameTypeList>> {
+    return this.http.post<BaseResponse<GameTypeList>>(`${this.baseUrl}${API.game_type_api.update_game_type}`, payload);
   }
 
-  deleteGameType(id: number | string): Observable<BaseResponse<any>> {
-    return this.http.delete<BaseResponse<any>>(`${this.baseUrl}${API.game_type_api.delete_game_type}/${id}`);
+  deleteGameType(payload: any): Observable<BaseResponse<any>> {
+    return this.http.post<BaseResponse<any>>(`${this.baseUrl}${API.game_type_api.delete_game_type}`, payload);
   }
 
-  updateGameTypeStatus(id: number | string, status: boolean): Observable<BaseResponse<any>> {
-    return this.http.put<BaseResponse<any>>(`${this.baseUrl}${API.game_type_api.update_game_type_status}/${id}`, { is_active: status });
+  updateGameTypeStatus(payload: any): Observable<BaseResponse<any>> {
+    return this.http.post<BaseResponse<any>>(`${this.baseUrl}${API.game_type_api.update_game_type_status}`, payload);
   }
 }

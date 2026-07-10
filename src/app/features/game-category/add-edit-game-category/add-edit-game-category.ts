@@ -79,14 +79,16 @@ export class AddEditGameCategory implements OnInit {
       return;
     }
 
-    const payload = {
+    const payload: any = {
       game_categorie_name: this.form.get('game_categorie_name')?.value,
       slug: this.form.get('slug')?.value,
+      user_id: this.commonService.getUserId() || 0,
     };
 
     this.commonService.showSpinner();
     if (this.isEditMode()) {
-      this.gameCategoryService.updateGameCategory(this.gameCategory!.game_categorie_id, payload).subscribe({
+      payload.game_categorie_id = this.gameCategory!.game_categorie_id;
+      this.gameCategoryService.updateGameCategory(payload).subscribe({
         next: (res: BaseResponse<GameCategoryList>) => {
           this.commonService.hideSpinner();
           if (res && res.status.code === 0) {

@@ -68,7 +68,8 @@ export class DeviceType implements OnInit {
       limit: this.pageSize(),
       search: this.searchQuery()?.trim() || '',
       sort_by: this.sort_by(),
-      sort_order: this.sort_order()
+      sort_order: this.sort_order(),
+      user_id: this.commonService.getUserId() || 0
     };
     this.deviceTypeService.getDeviceTypes(pagination).subscribe({
       next: (res: BaseResponse<DeviceTypeList[]>) => {
@@ -124,7 +125,11 @@ export class DeviceType implements OnInit {
     modalRef.componentInstance.onClose.subscribe((returnData: any) => {
       if (returnData) {
         this.commonService.showSpinner();
-        this.deviceTypeService.deleteDeviceType(deviceType.device_type_id).subscribe({
+        const payload: any = {
+          device_type_id: deviceType.device_type_id,
+          user_id: this.commonService.getUserId() || 0,
+        };
+        this.deviceTypeService.deleteDeviceType(payload).subscribe({
           next: (res: BaseResponse<any>) => {
             this.commonService.hideSpinner();
             if (res.status.code === 0) {
@@ -150,9 +155,13 @@ export class DeviceType implements OnInit {
   }
 
   onToggleStatus(deviceType: DeviceTypeList): void {
-    const newStatus = !deviceType.is_active;
     this.commonService.showSpinner();
-    this.deviceTypeService.updateDeviceTypeStatus(deviceType.device_type_id, newStatus).subscribe({
+    const payload: any = {
+      device_type_id: deviceType.device_type_id,
+      status: !deviceType.is_active,
+      user_id: this.commonService.getUserId() || 0,
+    };
+    this.deviceTypeService.updateDeviceTypeStatus(payload).subscribe({
       next: (res: BaseResponse<any>) => {
         this.commonService.hideSpinner();
         if (res.status.code === 0) {

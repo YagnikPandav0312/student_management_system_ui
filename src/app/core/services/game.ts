@@ -25,15 +25,15 @@ export class GameService {
     return this.http.post<BaseResponse<GameList>>(`${this.baseUrl}${API.games_api.create_game}`, payload);
   }
 
-  updateGame(id: number | string, payload: FormData): Observable<BaseResponse<GameList>> {
-    return this.http.put<BaseResponse<GameList>>(`${this.baseUrl}${API.games_api.update_game}/${id}`, payload);
+  updateGame(payload: FormData): Observable<BaseResponse<GameList>> {
+    return this.http.post<BaseResponse<GameList>>(`${this.baseUrl}${API.games_api.update_game}`, payload);
   }
 
-  deleteGame(id: number | string): Observable<BaseResponse<any>> {
-    return this.http.delete<BaseResponse<any>>(`${this.baseUrl}${API.games_api.delete_game}/${id}`);
+  deleteGame(payload: any): Observable<BaseResponse<any>> {
+    return this.http.post<BaseResponse<any>>(`${this.baseUrl}${API.games_api.delete_game}`, payload);
   }
 
-  updateGameStatus(id: number | string, status: boolean): Observable<BaseResponse<any>> {
-    return this.http.put<BaseResponse<any>>(`${this.baseUrl}${API.games_api.update_game_status}/${id}`, { is_active: status });
+  updateGameStatus(payload: any): Observable<BaseResponse<any>> {
+    return this.http.post<BaseResponse<any>>(`${this.baseUrl}${API.games_api.update_game_status}`, payload);
   }
 }

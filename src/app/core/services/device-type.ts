@@ -25,15 +25,15 @@ export class DeviceTypeService {
     return this.http.post<BaseResponse<DeviceTypeList>>(`${this.baseUrl}${API.device_type_api.create_device_type}`, payload);
   }
 
-  updateDeviceType(id: number | string, payload: { device_type_name: string; slug: string }): Observable<BaseResponse<DeviceTypeList>> {
-    return this.http.put<BaseResponse<DeviceTypeList>>(`${this.baseUrl}${API.device_type_api.update_device_type}/${id}`, payload);
+  updateDeviceType(payload: any): Observable<BaseResponse<DeviceTypeList>> {
+    return this.http.post<BaseResponse<DeviceTypeList>>(`${this.baseUrl}${API.device_type_api.update_device_type}`, payload);
   }
 
-  deleteDeviceType(id: number | string): Observable<BaseResponse<any>> {
-    return this.http.delete<BaseResponse<any>>(`${this.baseUrl}${API.device_type_api.delete_device_type}/${id}`);
+  deleteDeviceType(payload: any): Observable<BaseResponse<any>> {
+    return this.http.post<BaseResponse<any>>(`${this.baseUrl}${API.device_type_api.delete_device_type}`, payload);
   }
 
-  updateDeviceTypeStatus(id: number | string, status: boolean): Observable<BaseResponse<any>> {
-    return this.http.put<BaseResponse<any>>(`${this.baseUrl}${API.device_type_api.update_device_type_status}/${id}`, { is_active: status });
+  updateDeviceTypeStatus(payload: any): Observable<BaseResponse<any>> {
+    return this.http.post<BaseResponse<any>>(`${this.baseUrl}${API.device_type_api.update_device_type_status}`, payload);
   }
 }

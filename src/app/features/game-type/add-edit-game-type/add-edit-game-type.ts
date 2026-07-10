@@ -77,14 +77,16 @@ export class AddEditGametype implements OnInit {
       return;
     }
 
-    const payload = {
+    const payload: any = {
       game_types_name: this.form.get('game_types_name')?.value,
       slug: this.form.get('slug')?.value,
+      user_id: this.commonService.getUserId() || 0,
     };
 
     this.commonService.showSpinner();
     if (this.isEditMode()) {
-      this.gameTypeService.updateGameType(this.gameType!.game_type_id, payload).subscribe({
+      payload.game_type_id = this.gameType!.game_type_id;
+      this.gameTypeService.updateGameType(payload).subscribe({
         next: (res: BaseResponse<GameTypeList>) => {
           this.commonService.hideSpinner();
           if (res && res.status.code === 0) {

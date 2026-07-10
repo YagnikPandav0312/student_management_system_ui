@@ -75,14 +75,16 @@ export class AddEditDeviceType implements OnInit {
       return;
     }
 
-    const payload = {
+    const payload: any = {
       device_type_name: this.form.get('device_type_name')?.value,
       slug: this.form.get('slug')?.value,
+      user_id: this.commonService.getUserId() || 0,
     };
 
     if (this.isEditMode()) {
+      payload.device_type_id = this.deviceType.device_type_id;
       this.commonService.showSpinner();
-      this.deviceTypeService.updateDeviceType(this.deviceType.device_type_id, payload).subscribe({
+      this.deviceTypeService.updateDeviceType(payload).subscribe({
         next: (res: BaseResponse<DeviceTypeList>) => {
           this.commonService.hideSpinner();
           if (res && res.status.code === 0) {
