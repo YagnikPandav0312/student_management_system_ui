@@ -27,7 +27,7 @@ export class Providers implements OnInit {
   pageSize = signal<number>(10);
   totalItems = signal<number>(0);
   sort_by = signal<string>('provider_id');
-  sort_order = signal<string>('desc');
+  sort_order = signal<string>('DESC');
   showingFrom = computed(() => {
     if (this.providers().length === 0) return 0;
     return (this.currentPage() - 1) * this.pageSize() + 1;
@@ -41,7 +41,6 @@ export class Providers implements OnInit {
   private toastr = inject(ToastrService);
   private modalService = inject(NgbModal);
   private destroyRef = inject(DestroyRef);
-
   private searchSubject = new Subject<string>();
 
   constructor() {
@@ -54,18 +53,6 @@ export class Providers implements OnInit {
       this.currentPage.set(1);
       this.GetProviders();
     });
-  }
-
-  getLogoUrl(logoPath: string | null | undefined): string | null {
-    if (!logoPath) return null;
-    if (logoPath.startsWith('http://') || logoPath.startsWith('https://') || logoPath.startsWith('data:')) {
-      return logoPath;
-    }
-    let path = logoPath.replace(/\/+/g, '/');
-    if (!path.startsWith('/')) {
-      path = '/' + path;
-    }
-    return `http://localhost:3000${path}`;
   }
 
   ngOnInit(): void {
@@ -180,10 +167,10 @@ export class Providers implements OnInit {
 
   sort(column: string) {
     if (this.sort_by() === column) {
-      this.sort_order.update(sort_order => sort_order === 'asc' ? 'desc' : 'asc');
+      this.sort_order.update(sort_order => sort_order === 'ASC' ? 'DESC' : 'ASC');
     } else {
       this.sort_by.set(column);
-      this.sort_order.set('asc');
+      this.sort_order.set('ASC');
     }
     this.GetProviders();
   }

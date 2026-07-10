@@ -34,6 +34,8 @@ export class Games implements OnInit {
   currentPage = signal<number>(1);
   pageSize = signal<number>(10);
   totalItems = signal<number>(0);
+  sort_by = signal<string>('game_id');
+  sort_order = signal<string>('DESC');
 
   showingFrom = computed(() => {
     if (this.games().length === 0) return 0;
@@ -122,6 +124,8 @@ export class Games implements OnInit {
       page: this.currentPage(),
       limit: this.pageSize(),
       search: this.searchQuery()?.trim() || '',
+      sort_by: this.sort_by(),
+      sort_order: this.sort_order()
     };
     this.gameService.getGames(pagination).subscribe({
       next: (res: BaseResponse<GameList[]>) => {
@@ -181,7 +185,7 @@ export class Games implements OnInit {
 
     modalRef.componentInstance.close.subscribe((isSaved?: boolean) => {
       if (isSaved) {
-        this.GetGames();
+        this.loadGames();
       }
       modalRef.close();
     });
@@ -206,7 +210,7 @@ export class Games implements OnInit {
               if (this.games().length === 1 && this.currentPage() > 1) {
                 this.currentPage.update(p => p - 1);
               }
-              this.GetGames();
+              this.loadGames();
             } else {
               this.commonService.manageStatus(res.status);
             }
@@ -240,4 +244,15 @@ export class Games implements OnInit {
       },
     });
   }
+
+  sort(column: string) {
+    if (this.sort_by() === column) {
+      this.sort_order.update(sort_order => sort_order === 'ASC' ? 'DESC' : 'ASC');
+    } else {
+      this.sort_by.set(column);
+      this.sort_order.set('ASC');
+    }
+    this.loadGames();
+  }
 }
+

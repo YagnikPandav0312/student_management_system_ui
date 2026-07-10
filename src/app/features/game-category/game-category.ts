@@ -26,6 +26,8 @@ export class GameCategory implements OnInit {
   currentPage = signal<number>(1);
   pageSize = signal<number>(10);
   totalItems = signal<number>(0);
+  sort_by = signal<string>('game_categorie_id');
+  sort_order = signal<string>('DESC');
 
   showingFrom = computed(() => {
     if (this.gameCategories().length === 0) return 0;
@@ -65,6 +67,8 @@ export class GameCategory implements OnInit {
       page: this.currentPage(),
       limit: this.pageSize(),
       search: this.searchQuery()?.trim() || '',
+      sort_by: this.sort_by(),
+      sort_order: this.sort_order()
     };
     this.gameCategoryService.getGameCategories(pagination).subscribe({
       next: (res: BaseResponse<GameCategoryList[]>) => {
@@ -163,5 +167,15 @@ export class GameCategory implements OnInit {
         this.toastr.error(err.error?.message || 'Error occurred while updating game category status');
       },
     });
+  }
+
+  sort(column: string) {
+    if (this.sort_by() === column) {
+      this.sort_order.update(sort_order => sort_order === 'ASC' ? 'DESC' : 'ASC');
+    } else {
+      this.sort_by.set(column);
+      this.sort_order.set('ASC');
+    }
+    this.GetGameCategories();
   }
 }

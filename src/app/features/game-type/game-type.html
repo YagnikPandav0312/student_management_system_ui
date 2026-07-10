@@ -28,10 +28,38 @@
       <table class="table custom-table align-middle">
         <thead>
           <tr>
-            <th scope="col" class="d-none d-sm-table-cell" style="width: 100px;">ID</th>
-            <th scope="col">Game Type Name</th>
-            <th scope="col" class="d-none d-sm-table-cell">Slug</th>
-            <th scope="col" style="width: 120px;">Status</th>
+            <th scope="col" class="d-none d-sm-table-cell sortable" style="width: 100px;" (click)="sort('game_type_id')">
+              ID
+              @if (sort_by() === 'game_type_id') {
+                <i class="fa-solid" [ngClass]="sort_order() === 'ASC' ? 'fa-sort-up' : 'fa-sort-down'"></i>
+              } @else {
+                <i class="fa-solid fa-sort text-muted opacity-50"></i>
+              }
+            </th>
+            <th scope="col" class="sortable" (click)="sort('game_type_name')">
+              Game Type Name
+              @if (sort_by() === 'game_type_name') {
+                <i class="fa-solid" [ngClass]="sort_order() === 'ASC' ? 'fa-sort-up' : 'fa-sort-down'"></i>
+              } @else {
+                <i class="fa-solid fa-sort text-muted opacity-50"></i>
+              }
+            </th>
+            <th scope="col" class="d-none d-sm-table-cell sortable" (click)="sort('slug')">
+              Slug
+              @if (sort_by() === 'slug') {
+                <i class="fa-solid" [ngClass]="sort_order() === 'ASC' ? 'fa-sort-up' : 'fa-sort-down'"></i>
+              } @else {
+                <i class="fa-solid fa-sort text-muted opacity-50"></i>
+              }
+            </th>
+            <th scope="col" class="sortable" style="width: 120px;" (click)="sort('is_active')">
+              Status
+              @if (sort_by() === 'is_active') {
+                <i class="fa-solid" [ngClass]="sort_order() === 'ASC' ? 'fa-sort-up' : 'fa-sort-down'"></i>
+              } @else {
+                <i class="fa-solid fa-sort text-muted opacity-50"></i>
+              }
+            </th>
             <th scope="col" class="text-end" style="width: 150px;">Actions</th>
           </tr>
         </thead>

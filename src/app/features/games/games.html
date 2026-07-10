@@ -28,17 +28,52 @@
       <table class="table custom-table align-middle">
         <thead>
           <tr>
-            <th scope="col" class="d-none d-md-table-cell" style="width: 80px;">ID</th>
+            <th scope="col" class="d-none d-md-table-cell sortable" style="width: 80px;" (click)="sort('game_id')">
+              ID
+              @if (sort_by() === 'game_id') {
+                <i class="fa-solid" [ngClass]="sort_order() === 'ASC' ? 'fa-sort-up' : 'fa-sort-down'"></i>
+              } @else {
+                <i class="fa-solid fa-sort text-muted opacity-50"></i>
+              }
+            </th>
             <th scope="col" style="width: 70px;">Logo</th>
-            <th scope="col">Game Name</th>
+            <th scope="col" class="sortable" (click)="sort('game_name')">
+              Game Name
+              @if (sort_by() === 'game_name') {
+                <i class="fa-solid" [ngClass]="sort_order() === 'ASC' ? 'fa-sort-up' : 'fa-sort-down'"></i>
+              } @else {
+                <i class="fa-solid fa-sort text-muted opacity-50"></i>
+              }
+            </th>
             <th scope="col">Provider</th>
             <th scope="col" class="d-none d-sm-table-cell">Category</th>
             <th scope="col" class="d-none d-md-table-cell">Game Type</th>
             <th scope="col" class="d-none d-md-table-cell">Device Type</th>
-            <th scope="col" class="d-none d-lg-table-cell">RTP & Variance</th>
-            <th scope="col" class="d-none d-lg-table-cell">Min/Max Bet</th>
+            <th scope="col" class="d-none d-lg-table-cell sortable" (click)="sort('rtp')">
+              RTP & Variance
+              @if (sort_by() === 'rtp') {
+                <i class="fa-solid" [ngClass]="sort_order() === 'ASC' ? 'fa-sort-up' : 'fa-sort-down'"></i>
+              } @else {
+                <i class="fa-solid fa-sort text-muted opacity-50"></i>
+              }
+            </th>
+            <th scope="col" class="d-none d-lg-table-cell sortable" (click)="sort('min_bet')">
+              Min/Max Bet
+              @if (sort_by() === 'min_bet') {
+                <i class="fa-solid" [ngClass]="sort_order() === 'ASC' ? 'fa-sort-up' : 'fa-sort-down'"></i>
+              } @else {
+                <i class="fa-solid fa-sort text-muted opacity-50"></i>
+              }
+            </th>
             <th scope="col" class="d-none d-lg-table-cell">Max Win</th>
-            <th scope="col" style="width: 100px;">Status</th>
+            <th scope="col" class="sortable" style="width: 100px;" (click)="sort('is_active')">
+              Status
+              @if (sort_by() === 'is_active') {
+                <i class="fa-solid" [ngClass]="sort_order() === 'ASC' ? 'fa-sort-up' : 'fa-sort-down'"></i>
+              } @else {
+                <i class="fa-solid fa-sort text-muted opacity-50"></i>
+              }
+            </th>
             <th scope="col" class="text-end" style="width: 130px;">Actions</th>
           </tr>
         </thead>
