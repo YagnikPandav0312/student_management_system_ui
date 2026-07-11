@@ -36,4 +36,8 @@ export class GameCategoryService {
   updateGameCategoryStatus(payload: any): Observable<BaseResponse<any>> {
     return this.http.post<BaseResponse<any>>(`${this.baseUrl}${API.game_category_api.update_game_category_status}`, payload);
   }
+
+  getGameCategoryDdl(payload: any): Observable<BaseResponse<GameCategoryList[]>> {
+    return this.http.post<BaseResponse<GameCategoryList[]>>(`${this.baseUrl}${API.game_category_api.get_game_category_ddl}`, payload || {});
+  }
 }

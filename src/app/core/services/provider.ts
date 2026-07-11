@@ -39,4 +39,8 @@ export class ProviderService {
   updateProviderStatus(payload:any): Observable<BaseResponse<any>> {
     return this.http.post<BaseResponse<any>>(`${this.baseUrl}${API.providers_api.update_provider_status}`, payload);
   }
+
+  getProviderDdl(payload?: any): Observable<BaseResponse<ProviderList[]>> {
+    return this.http.post<BaseResponse<ProviderList[]>>(`${this.baseUrl}${API.providers_api.get_provider_ddl}`, payload || {});
+  }
 }

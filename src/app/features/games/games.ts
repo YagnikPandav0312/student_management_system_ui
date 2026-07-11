@@ -86,10 +86,10 @@ export class Games implements OnInit {
   GetGames(): void {
     this.commonService.showSpinner();
     forkJoin({
-      providers: this.providerService.getProviders({ user_id: this.commonService.getUserId() || 0 }),
-      categories: this.gameCategoryService.getGameCategories({ user_id: this.commonService.getUserId() || 0 }),
-      gameTypes: this.gameTypeService.getGameTypes({ user_id: this.commonService.getUserId() || 0 }),
-      deviceTypes: this.deviceTypeService.getDeviceTypes({ user_id: this.commonService.getUserId() || 0 }),
+      providers: this.providerService.getProviderDdl({ user_id: this.commonService.getUserId() || 0 }),
+      categories: this.gameCategoryService.getGameCategoryDdl({ user_id: this.commonService.getUserId() || 0 }),
+      gameTypes: this.gameTypeService.getGameTypeDdl({ user_id: this.commonService.getUserId() || 0 }),
+      deviceTypes: this.deviceTypeService.getDeviceTypeDdl({ user_id: this.commonService.getUserId() || 0 }),
     }).subscribe({
       next: (res: any) => {
         if (res.providers && res.providers.status && res.providers.status.code === 0) {

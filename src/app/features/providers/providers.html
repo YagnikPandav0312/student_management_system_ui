@@ -66,7 +66,7 @@
                  <img [src]="provider.logo" [alt]="provider.provider_name + 'logo'" class="provider-logo" />
                 } @else {
                 <div class="default-logo-avatar">
-                  {{ provider.provider_name.charAt(0).toUpperCase() }}
+                  {{ provider.provider_name?.charAt(0)?.toUpperCase() || '' }}
                 </div>
                 }
               </div>

@@ -6,6 +6,7 @@ export const API = {
         update_providers: '/providers/update_providers',
         delete_provider: '/providers/delete_provider',
         update_provider_status: '/providers/update_provider_status',
+        get_provider_ddl: '/providers/get_provider_ddl',
     },
     game_type_api: {
         get_game_type: '/gametype/get_game_type',
@@ -14,6 +15,7 @@ export const API = {
         update_game_type: '/gametype/update_game_type',
         delete_game_type: '/gametype/delete_game_type',
         update_game_type_status: '/gametype/update_game_type_status',
+        get_game_type_ddl: '/gametype/get_game_type_ddl',
     },
     device_type_api: {
         get_device_type: '/devicetype/get_device_type',
@@ -22,6 +24,7 @@ export const API = {
         update_device_type: '/devicetype/update_device_type',
         delete_device_type: '/devicetype/delete_device_type',
         update_device_type_status: '/devicetype/update_device_type_status',
+        get_device_type_ddl: '/devicetype/get_device_type_ddl',
     },
     game_category_api: {
         get_game_category: '/gamecategory/get_game_category',
@@ -30,6 +33,7 @@ export const API = {
         update_game_category: '/gamecategory/update_game_category',
         delete_game_category: '/gamecategory/delete_game_category',
         update_game_category_status: '/gamecategory/update_game_category_status',
+        get_game_category_ddl: '/gamecategory/get_game_category_ddl',
     },
     games_api: {
         get_games: '/games/get_game',

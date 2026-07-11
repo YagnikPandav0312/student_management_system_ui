@@ -36,4 +36,8 @@ export class DeviceTypeService {
   updateDeviceTypeStatus(payload: any): Observable<BaseResponse<any>> {
     return this.http.post<BaseResponse<any>>(`${this.baseUrl}${API.device_type_api.update_device_type_status}`, payload);
   }
+
+  getDeviceTypeDdl(payload?: any): Observable<BaseResponse<DeviceTypeList[]>> {
+    return this.http.post<BaseResponse<DeviceTypeList[]>>(`${this.baseUrl}${API.device_type_api.get_device_type_ddl}`, payload || {});
+  } 
 }

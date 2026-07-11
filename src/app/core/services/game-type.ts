@@ -36,4 +36,8 @@ export class GameTypeService {
   updateGameTypeStatus(payload: any): Observable<BaseResponse<any>> {
     return this.http.post<BaseResponse<any>>(`${this.baseUrl}${API.game_type_api.update_game_type_status}`, payload);
   }
+
+  getGameTypeDdl(payload?: any): Observable<BaseResponse<GameTypeList[]>> {
+    return this.http.post<BaseResponse<GameTypeList[]>>(`${this.baseUrl}${API.game_type_api.get_game_type_ddl}`, payload || {});
+  } 
 }
