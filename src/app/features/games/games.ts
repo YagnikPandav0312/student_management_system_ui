@@ -158,17 +158,27 @@ export class Games implements OnInit {
     return this.providersMap.get(id) || 'Unknown';
   }
 
-  getCategoryName(id: number): string {
+  getCategoryName(id: any): string {
+    if (!id) return '-';
+    if (Array.isArray(id)) {
+      return id.map(item => this.categoriesMap.get(item) || 'Unknown').join(', ');
+    }
     return this.categoriesMap.get(id) || 'Unknown';
   }
 
-  getGameTypeName(id: number): string {
+  getGameTypeName(id: any): string {
     if (!id) return '-';
+    if (Array.isArray(id)) {
+      return id.map(item => this.gameTypesMap.get(item) || 'Unknown').join(', ');
+    }
     return this.gameTypesMap.get(id) || 'Unknown';
   }
 
-  getDeviceTypeName(id: number): string {
+  getDeviceTypeName(id: any): string {
     if (!id) return '-';
+    if (Array.isArray(id)) {
+      return id.map(item => this.deviceTypesMap.get(item) || 'Unknown').join(', ');
+    }
     return this.deviceTypesMap.get(id) || 'Unknown';
   }
 

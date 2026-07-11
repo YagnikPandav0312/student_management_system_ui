@@ -17,4 +17,7 @@ export interface getPayloadReq {
   sort_by?: string;
   sort_order?: string;
   user_id?: number;
+  category_id?: number[] | string;
+  game_type_id?: number[] | string;
+  device_type_id?: number[] | string;
 }

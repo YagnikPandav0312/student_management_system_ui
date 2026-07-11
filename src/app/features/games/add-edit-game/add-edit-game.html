@@ -13,16 +13,16 @@
         <label for="game_name" class="form-label">Game Name <span class="required">*</span></label>
         <div class="input-wrapper">
           <i class="fa-solid fa-gamepad input-icon"></i>
-          <input type="text" id="game_name" class="form-control" formControlName="game_name" placeholder="Enter game name"
-            [class.is-invalid]="submitted() && f['game_name'].errors" />
+          <input type="text" id="game_name" class="form-control" formControlName="game_name"
+            placeholder="Enter game name" [class.is-invalid]="submitted() && f['game_name'].errors" />
         </div>
         @if (submitted() && f['game_name'].errors) {
         <div class="error-feedback">
           @if (f['game_name'].errors['required']) {
-            Game Name is required
+          Game Name is required
           }
           @if (f['game_name'].errors['maxlength']) {
-            Game Name cannot exceed 100 characters
+          Game Name cannot exceed 100 characters
           }
         </div>
         }
@@ -39,10 +39,10 @@
         @if (submitted() && f['slug'].errors) {
         <div class="error-feedback">
           @if (f['slug'].errors['required']) {
-            Slug is required
+          Slug is required
           }
           @if (f['slug'].errors['pattern']) {
-            Slug must contain only lowercase letters, numbers, and hyphens (-)
+          Slug must contain only lowercase letters, numbers, and hyphens (-)
           }
         </div>
         }
@@ -55,7 +55,7 @@
           [class.is-invalid]="submitted() && f['provider_id'].errors">
           <option value="" disabled selected>Select Provider</option>
           @for (provider of providers; track provider.provider_id) {
-            <option [value]="provider.provider_id">{{ provider.provider_name }}</option>
+          <option [value]="provider.provider_id">{{ provider.provider_name }}</option>
           }
         </select>
         @if (submitted() && f['provider_id'].errors) {
@@ -68,13 +68,10 @@
       <!-- Category -->
       <div class="col-lg-4 col-md-6">
         <label for="category_id" class="form-label">Category <span class="required">*</span></label>
-        <select id="category_id" class="form-select" formControlName="category_id"
-          [class.is-invalid]="submitted() && f['category_id'].errors">
-          <option value="" disabled selected>Select Category</option>
-          @for (cat of categories; track cat.game_categorie_id) {
-            <option [value]="cat.game_categorie_id">{{ cat.game_categorie_name }}</option>
-          }
-        </select>
+        <ng-select [items]="categories" bindLabel="game_categorie_name" bindValue="game_categorie_id" [multiple]="true"
+          placeholder="Select Category" formControlName="category_id" [searchable]="true" [clearable]="true"
+          [closeOnSelect]="false">
+        </ng-select>
         @if (submitted() && f['category_id'].errors) {
         <div class="error-feedback">
           Category is required
@@ -85,13 +82,10 @@
       <!-- Game Type -->
       <div class="col-lg-4 col-md-6">
         <label for="game_type_id" class="form-label">Game Type <span class="required">*</span></label>
-        <select id="game_type_id" class="form-select" formControlName="game_type_id"
-          [class.is-invalid]="submitted() && f['game_type_id'].errors">
-          <option value="" disabled selected>Select Game Type</option>
-          @for (type of gameTypes; track type.game_type_id) {
-            <option [value]="type.game_type_id">{{ type.game_type_name }}</option>
-          }
-        </select>
+        <ng-select [items]="gameTypes" bindLabel="game_type_name" bindValue="game_type_id" [multiple]="true"
+          placeholder="Select Game Type" formControlName="game_type_id" [searchable]="true" [clearable]="true"
+          [closeOnSelect]="false">
+        </ng-select>
         @if (submitted() && f['game_type_id'].errors) {
         <div class="error-feedback">
           Game Type is required
@@ -102,19 +96,17 @@
       <!-- Device Type -->
       <div class="col-lg-4 col-md-6">
         <label for="device_type_id" class="form-label">Device Type <span class="required">*</span></label>
-        <select id="device_type_id" class="form-select" formControlName="device_type_id"
-          [class.is-invalid]="submitted() && f['device_type_id'].errors">
-          <option value="" disabled selected>Select Device Type</option>
-          @for (type of deviceTypes; track type.device_type_id) {
-            <option [value]="type.device_type_id">{{ type.device_type_name }}</option>
-          }
-        </select>
+        <ng-select [items]="deviceTypes" bindLabel="device_type_name" bindValue="device_type_id" [multiple]="true"
+          placeholder="Select Device Type" formControlName="device_type_id" [searchable]="true" [clearable]="true"
+          [closeOnSelect]="false">
+        </ng-select>
         @if (submitted() && f['device_type_id'].errors) {
         <div class="error-feedback">
           Device Type is required
         </div>
         }
       </div>
+
 
       <!-- Release Date -->
       <div class="col-lg-4 col-md-6">
@@ -161,8 +153,8 @@
       <!-- Max Bet -->
       <div class="col-lg-4 col-md-6">
         <label for="max_bet" class="form-label">Max Bet ($)</label>
-        <input type="number" step="0.01" id="max_bet" class="form-control" formControlName="max_bet" placeholder="100.00"
-          [class.is-invalid]="submitted() && f['max_bet'].errors" />
+        <input type="number" step="0.01" id="max_bet" class="form-control" formControlName="max_bet"
+          placeholder="100.00" [class.is-invalid]="submitted() && f['max_bet'].errors" />
         @if (submitted() && f['max_bet'].errors) {
         <div class="error-feedback">
           Max Bet must be 0 or higher

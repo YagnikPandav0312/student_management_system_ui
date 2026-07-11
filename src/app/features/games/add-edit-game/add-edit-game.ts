@@ -10,11 +10,12 @@ import { ProviderList } from '../../../model/provider.model';
 import { GameCategoryList } from '../../../model/game-category.model';
 import { GameTypeList } from '../../../model/game-type.model';
 import { DeviceTypeList } from '../../../model/device-type.model';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-add-edit-game',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,NgSelectModule],
   templateUrl: './add-edit-game.html',
   styleUrl: './add-edit-game.scss',
 })
