@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Confirm } from '../../shared/component/confirm/confirm';
 import { ToastrService } from 'ngx-toastr';
 import { Common } from '../../core/services/common';
+import { Auth } from '../../core/services/auth';
 
 @Component({
   selector: 'app-sidebar',
@@ -17,6 +18,7 @@ export class Sidebar {
   private router = inject(Router);
   private toastr = inject(ToastrService);
   common = inject(Common);
+  private authService = inject(Auth);
 
   logOut() {
     const modalRef = this.modalService.open(Confirm, {
@@ -28,13 +30,20 @@ export class Sidebar {
     modalRef.componentInstance.message = 'Are you sure you want to logout ?';
     modalRef.componentInstance.onClose.subscribe((returnData: any) => {
       if (returnData) {
-        this.router.navigate(['/login']);
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        localStorage.clear();
-        this.toastr.success('User logout successfully !');
-        this.common.closeSidebar();
+        this.authService.logout().subscribe({
+          next: (data) => {
+            this.router.navigate(['/login']);
+            localStorage.clear();
+            this.toastr.success(data.status.message);
+            this.common.closeSidebar();
+          },
+          error: (err) => {
+            console.error('Logout error:', err);
+            this.router.navigate(['/login']);
+            localStorage.clear();
+            this.toastr.error(err.status.message);
+          }
+        });
       }
       modalRef.close();
     });

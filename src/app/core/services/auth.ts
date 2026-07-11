@@ -22,4 +22,8 @@ export class Auth {
   register(data: RegisterRequest): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/register`, data);
   }
+
+  logout(): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/logout`, {});
+  }
 }
