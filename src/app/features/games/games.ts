@@ -24,7 +24,7 @@ import { DeviceTypeList } from '../../model/device-type.model';
 @Component({
   selector: 'app-games',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgbPaginationModule,FormsModule],
+  imports: [CommonModule, FormsModule, NgbPaginationModule],
   templateUrl: './games.html',
   styleUrl: './games.scss',
 })

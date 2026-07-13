@@ -128,11 +128,7 @@
             </td>
             <td>
               <button class="btn btn-link p-0 border-0" [disabled]="role() !== 'admin'" (click)="onToggleStatus(game)" [title]="game.is_active ? 'Deactivate Game' : 'Activate Game'">
-                @if (game.is_active) {
-                  <i class="fa-solid fa-toggle-on text-success fs-4"></i>
-                } @else {
-                  <i class="fa-solid fa-toggle-off text-secondary fs-4"></i>
-                }
+                  <i [ngClass]="game.is_active ? 'fa-toggle-on text-success':'fa-toggle-off text-secondary'" class="fa-solid  fs-4"></i>
               </button>
             </td>
             <td class="text-end">
