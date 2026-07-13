@@ -127,7 +127,7 @@
               <span class="max-win-text text-success font-weight-bold">{{ game.max_win || '-' }}</span>
             </td>
             <td>
-              <button class="btn btn-link p-0 border-0" (click)="onToggleStatus(game)" [title]="game.is_active ? 'Deactivate Game' : 'Activate Game'">
+              <button class="btn btn-link p-0 border-0" [disabled]="role() !== 'admin'" (click)="onToggleStatus(game)" [title]="game.is_active ? 'Deactivate Game' : 'Activate Game'">
                 @if (game.is_active) {
                   <i class="fa-solid fa-toggle-on text-success fs-4"></i>
                 } @else {
@@ -136,11 +136,11 @@
               </button>
             </td>
             <td class="text-end">
-              <div class="action-buttons d-inline-flex gap-2">
-                <button class="btn btn-action btn-edit" (click)="openFormModal(game)" title="Edit Game">
+              <div class="action-buttons d-inline-flex gap-2" >
+                <button class="btn btn-action btn-edit" [disabled]="role() !== 'admin'" (click)="openFormModal(game)" title="Edit Game">
                   <i class="fa-solid fa-pen-to-square"></i>
                 </button>
-                <button class="btn btn-action btn-delete" (click)="onDeleteGame(game)" title="Delete Game">
+                <button class="btn btn-action btn-delete" [disabled]="role() !== 'admin'" (click)="onDeleteGame(game)" title="Delete Game">
                   <i class="fa-solid fa-trash-can"></i>
                 </button>
               </div>

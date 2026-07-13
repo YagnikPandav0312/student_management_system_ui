@@ -24,7 +24,7 @@ import { DeviceTypeList } from '../../model/device-type.model';
 @Component({
   selector: 'app-games',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgbPaginationModule],
+  imports: [CommonModule, FormsModule, NgbPaginationModule,FormsModule],
   templateUrl: './games.html',
   styleUrl: './games.scss',
 })
@@ -64,7 +64,7 @@ export class Games implements OnInit {
   private toastr = inject(ToastrService);
   private modalService = inject(NgbModal);
   private destroyRef = inject(DestroyRef);
-
+  public role = signal('');
   private searchSubject = new Subject<string>();
 
   constructor() {
@@ -81,6 +81,17 @@ export class Games implements OnInit {
 
   ngOnInit(): void {
     this.GetGames();
+    try {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        if (user && user.full_name) {
+          this.role.set(user.role);
+        }
+      }
+    } catch (e) {
+      console.error('Failed to parse user details', e);
+  }
   }
 
   GetGames(): void {
