@@ -45,5 +45,13 @@ export const API = {
     },
     dashboard_api: {
         get_statistics: '/dashboard/statistics',
+    },
+    player_api: {
+        get_players: '/player/get_players',
+        get_player_by_id: '/player/get_player_by_id',
+        create_player: '/player/create_player',
+        update_player: '/player/update_player',
+        delete_player: '/player/delete_player',
+        update_player_status: '/player/update_player_status',
     }
 }

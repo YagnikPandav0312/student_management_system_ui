@@ -1,0 +1,85 @@
+<div class="form-container">
+  <div class="form-header">
+    <h3>{{ isEditMode() ? 'Edit Player' : 'Add New Player' }}</h3>
+    <button type="button" class="btn-close-panel" (click)="onCancel()" aria-label="Close panel">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-body">
+    <!-- Full Name -->
+    <div class="form-group mb-4">
+      <label for="full_name" class="form-label">Full Name <span class="required">*</span></label>
+      <div class="input-wrapper">
+        <i class="fa-solid fa-user input-icon"></i>
+        <input type="text" id="full_name" formControlName="full_name" class="form-control"
+          placeholder="Enter player full name..." [class.is-invalid]="submitted() && f['full_name'].errors" />
+      </div>
+      @if (submitted() && f['full_name'].errors) {
+        <div class="error-feedback">
+          @if (f['full_name'].errors['required']) {
+            <span>Full name is required.</span>
+          }
+          @if (f['full_name'].errors['maxlength']) {
+            <span>Full name cannot exceed 100 characters.</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Email -->
+    <div class="form-group mb-4">
+      <label for="email" class="form-label">Email Address <span class="required">*</span></label>
+      <div class="input-wrapper">
+        <i class="fa-solid fa-envelope input-icon"></i>
+        <input type="email" id="email" formControlName="email" class="form-control"
+          placeholder="Enter player email..." [class.is-invalid]="submitted() && f['email'].errors" />
+      </div>
+      @if (submitted() && f['email'].errors) {
+        <div class="error-feedback">
+          @if (f['email'].errors['required']) {
+            <span>Email is required.</span>
+          }
+          @if (f['email'].errors['email']) {
+            <span>Please enter a valid email address.</span>
+          }
+          @if (f['email'].errors['maxlength']) {
+            <span>Email cannot exceed 255 characters.</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Password (Only on Create Mode) -->
+    @if (!isEditMode()) {
+      <div class="form-group mb-4">
+        <label for="password" class="form-label">Password <span class="required">*</span></label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock input-icon"></i>
+          <input type="password" id="password" formControlName="password" class="form-control"
+            placeholder="Enter password..." [class.is-invalid]="submitted() && f['password'].errors" />
+        </div>
+        @if (submitted() && f['password'].errors) {
+          <div class="error-feedback">
+            @if (f['password'].errors['required']) {
+              <span>Password is required.</span>
+            }
+            @if (f['password'].errors['minlength']) {
+              <span>Password must be at least 6 characters.</span>
+            }
+            @if (f['password'].errors['maxlength']) {
+              <span>Password cannot exceed 50 characters.</span>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <div class="form-footer">
+      <button type="button" class="btn btn-secondary-custom" (click)="onCancel()">Cancel</button>
+      <button type="submit" class="btn btn-primary-custom">
+        <i class="fa-solid fa-check me-2"></i> {{ isEditMode() ? 'Update' : 'Save' }}
+      </button>
+    </div>
+  </form>
+</div>
