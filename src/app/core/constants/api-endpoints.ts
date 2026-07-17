@@ -53,5 +53,13 @@ export const API = {
         update_player: '/player/update_player',
         delete_player: '/player/delete_player',
         update_player_status: '/player/update_player_status',
+    },
+    sport_api: {
+        get_sport: '/sport/get_sport',
+        get_sport_by_id: '/sport/get_sport_by_id',
+        create_sport: '/sport/create_sport',
+        update_sport: '/sport/update_sport',
+        delete_sport: '/sport/delete_sport',
+        update_sport_status: '/sport/update_sport_status',
     }
 }
