@@ -50,13 +50,13 @@ export class Header implements OnInit {
     modalRef.componentInstance.message = 'Are you sure you want to logout ?';
     modalRef.componentInstance.onClose.subscribe((returnData: any) => {
       if (returnData) {
-        this.authService.logout().subscribe({
+        this.authService.logout(this.commonService.getUserId()).subscribe({
           next: (data) => {
             localStorage.clear();
             this.router.navigate(['/login']);
             this.toastr.success(data.status.message);
           },
-          error: (err) => { 
+          error: (err) => {
             localStorage.clear();
             this.router.navigate(['/login']);
             this.toastr.error(err.status.message);

@@ -4,4 +4,6 @@ export interface GameCategoryList {
   game_categorie_name?: string;
   is_active: boolean;
   slug: string;
+  game_type_id?: number[] | string | number | null;
+  game_type_name?: string;
 }

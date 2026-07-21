@@ -19,6 +19,7 @@ export class Sidebar {
   private toastr = inject(ToastrService);
   common = inject(Common);
   private authService = inject(Auth);
+  private commonService = inject(Common);
 
   logOut() {
     const modalRef = this.modalService.open(Confirm, {
@@ -30,7 +31,7 @@ export class Sidebar {
     modalRef.componentInstance.message = 'Are you sure you want to logout ?';
     modalRef.componentInstance.onClose.subscribe((returnData: any) => {
       if (returnData) {
-        this.authService.logout().subscribe({
+        this.authService.logout(this.commonService.getUserId()).subscribe({
           next: (data) => {
             this.router.navigate(['/login']);
             localStorage.clear();

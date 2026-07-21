@@ -6,22 +6,23 @@ import { Common } from '../../../core/services/common';
 import { ToastrService } from 'ngx-toastr';
 import { BaseResponse } from '../../../model/api.model';
 import { GameCategoryList } from '../../../model/game-category.model';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { GameTypeList } from '../../../model/game-type.model';
 
 @Component({
   selector: 'app-add-edit-game-category',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NgSelectModule],
   templateUrl: './add-edit-game-category.html',
   styleUrl: './add-edit-game-category.scss',
 })
 export class AddEditGameCategory implements OnInit {
   @Input() gameCategory: GameCategoryList | null = null;
   @Output() close = new EventEmitter<boolean>();
-
   form!: FormGroup;
   submitted = signal<boolean>(false);
   isEditMode = signal<boolean>(false);
-
+  @Input() gameTypes: GameTypeList[] = [];
   private fb = inject(FormBuilder);
   private gameCategoryService = inject(GameCategoryService);
   private commonService = inject(Common);
@@ -30,10 +31,12 @@ export class AddEditGameCategory implements OnInit {
   ngOnInit(): void {
     this.initForm();
     if (this.gameCategory) {
+      console.log(this.gameCategory);
       this.isEditMode.set(true);
       this.form.patchValue({
         game_categorie_name: this.gameCategory.game_categorie_name,
         slug: this.gameCategory.slug || '',
+        game_type_id: this.gameCategory.game_type_id,
       });
     } else {
       this.isEditMode.set(false);
@@ -44,6 +47,7 @@ export class AddEditGameCategory implements OnInit {
     this.form = this.fb.group({
       game_categorie_name: ['', [Validators.required, Validators.maxLength(100)]],
       slug: ['', [Validators.required, Validators.pattern(/^[a-z0-9-]+$/)]],
+      game_type_id: ['', [Validators.required]],
     });
     this.submitted.set(false);
 
@@ -83,6 +87,7 @@ export class AddEditGameCategory implements OnInit {
       game_categorie_name: this.form.get('game_categorie_name')?.value,
       slug: this.form.get('slug')?.value,
       user_id: this.commonService.getUserId() || 0,
+      game_type_id: this.form.get('game_type_id')?.value,
     };
 
     this.commonService.showSpinner();

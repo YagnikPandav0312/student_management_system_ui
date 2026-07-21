@@ -9,11 +9,11 @@ import { environment } from '../../../environment/environment';
 })
 
 export class Auth {
-  
+
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
 
-  constructor() {}
+  constructor() { }
 
   login(data: LoginRequest): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/login`, data);
@@ -23,7 +23,7 @@ export class Auth {
     return this.http.post(`${this.baseUrl}/auth/register`, data);
   }
 
-  logout(): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/logout`, {});
+  logout(user_id: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/logout`, { user_id });
   }
 }

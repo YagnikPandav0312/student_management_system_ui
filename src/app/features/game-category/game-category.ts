@@ -12,6 +12,8 @@ import { GameCategoryList } from '../../model/game-category.model';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { GameTypeService } from '../../core/services/game-type';
+import { GameTypeList } from '../../model/game-type.model';
 
 @Component({
   selector: 'app-game-category',
@@ -28,7 +30,7 @@ export class GameCategory implements OnInit {
   totalItems = signal<number>(0);
   sort_by = signal<string>('game_categorie_id');
   sort_order = signal<string>('DESC');
-
+  gameTypes = signal<GameTypeList[]>([]);
   showingFrom = computed(() => {
     if (this.gameCategories().length === 0) return 0;
     return (this.currentPage() - 1) * this.pageSize() + 1;
@@ -42,7 +44,7 @@ export class GameCategory implements OnInit {
   private toastr = inject(ToastrService);
   private modalService = inject(NgbModal);
   private destroyRef = inject(DestroyRef);
-
+  private gameTypeService = inject(GameTypeService);
   private searchSubject = new Subject<string>();
 
   constructor() {
@@ -59,6 +61,18 @@ export class GameCategory implements OnInit {
 
   ngOnInit(): void {
     this.GetGameCategories();
+    this.loadGameTypes();
+  }
+
+  loadGameTypes(): void {
+    this.gameTypeService.getGameTypeDdl({ user_id: this.commonService.getUserId() || 0 }).subscribe({
+      next: (res: BaseResponse<GameTypeList[]>) => {
+        if (res.status.code === 0) {
+          this.gameTypes.set(res.data || []);
+        }
+      },
+      error: () => { }
+    });
   }
 
   GetGameCategories(): void {
@@ -106,6 +120,7 @@ export class GameCategory implements OnInit {
       size: 'md',
     });
     modalRef.componentInstance.gameCategory = item;
+    modalRef.componentInstance.gameTypes = this.gameTypes();
     modalRef.componentInstance.close.subscribe((isSaved?: boolean) => {
       if (isSaved) {
         this.GetGameCategories();
