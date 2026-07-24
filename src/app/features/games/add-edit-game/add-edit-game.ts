@@ -206,7 +206,7 @@ export class AddEditGame implements OnInit {
         },
         error: (err) => {
           this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'An error occurred while updating game');
+          this.toastr.error(err.error?.status?.message || 'An error occurred while updating game');
         },
       });
     } else {
@@ -224,7 +224,7 @@ export class AddEditGame implements OnInit {
         },
         error: (err) => {
           this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'An error occurred while creating game');
+          this.toastr.error(err.error?.status?.message || 'An error occurred while creating game');
         },
       });
     }

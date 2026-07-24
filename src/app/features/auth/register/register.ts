@@ -54,7 +54,7 @@ export class Register {
       next: (res: BaseResponse<any>) => {
         this.commonService.hideSpinner();
         if (res && res.status.code === 0) {
-          this.toastr.success(res.status.message || 'User registered successfully!', 'Success');
+          this.commonService.manageStatus(res.status);
           this.router.navigate(['/login']);
           this.submitted.set(false);
         } else {

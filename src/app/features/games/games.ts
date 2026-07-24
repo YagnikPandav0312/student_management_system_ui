@@ -91,7 +91,7 @@ export class Games implements OnInit {
       }
     } catch (e) {
       console.error('Failed to parse user details', e);
-  }
+    }
   }
 
   GetGames(): void {
@@ -123,7 +123,7 @@ export class Games implements OnInit {
       },
       error: (err) => {
         this.commonService.hideSpinner();
-        this.toastr.error('Failed to load initial lookups');
+        this.toastr.error(err.error?.status?.message || 'Error occurred while loading Games');
         this.loadGames();
       }
     });
@@ -151,7 +151,7 @@ export class Games implements OnInit {
       },
       error: (err) => {
         this.commonService.hideSpinner();
-        this.toastr.error(err.error?.message || 'Error occurred while loading games');
+        this.toastr.error(err.error?.status?.message || 'Error occurred while loading Games');
       },
     });
   }
@@ -243,7 +243,7 @@ export class Games implements OnInit {
           },
           error: (err) => {
             this.commonService.hideSpinner();
-            this.toastr.error(err.error?.message || 'Error occurred while deleting game');
+            this.toastr.error(err.error?.status?.message || 'Error occurred while deleting game');
           },
         });
       }
@@ -270,7 +270,7 @@ export class Games implements OnInit {
       },
       error: (err) => {
         this.commonService.hideSpinner();
-        this.toastr.error(err.error?.message || 'Error occurred while updating game status');
+        this.toastr.error(err.error?.status?.message || 'Error occurred while updating game status');
       },
     });
   }

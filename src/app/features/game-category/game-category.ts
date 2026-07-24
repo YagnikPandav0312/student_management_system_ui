@@ -99,7 +99,7 @@ export class GameCategory implements OnInit {
       },
       error: (err: any) => {
         this.commonService.hideSpinner();
-        this.toastr.error(err.error?.message || 'Error occurred while loading game categories');
+        this.toastr.error(err.error?.status?.message || 'Error occurred while loading game categories');
       },
     });
   }
@@ -161,7 +161,7 @@ export class GameCategory implements OnInit {
           },
           error: (err) => {
             this.commonService.hideSpinner();
-            this.toastr.error(err.error?.message || 'Error occurred while deleting game category');
+            this.toastr.error(err.error?.status?.message || 'Error occurred while deleting game category');
           },
         });
       }
@@ -188,7 +188,7 @@ export class GameCategory implements OnInit {
       },
       error: (err) => {
         this.commonService.hideSpinner();
-        this.toastr.error(err.error?.message || 'Error occurred while updating game category status');
+        this.toastr.error(err.error?.status?.message || 'Error occurred while updating game category status');
       },
     });
   }

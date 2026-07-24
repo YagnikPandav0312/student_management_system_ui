@@ -25,7 +25,7 @@ export class Login {
     private fb: FormBuilder,
     private authService: Auth,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (localStorage.getItem('token')) {
@@ -79,8 +79,8 @@ export class Login {
         }
       },
       error: (err: any) => {
-        this.toastr.error(err || 'Error User Login', 'Error');
         this.commonService.hideSpinner();
+        this.toastr.error(err.error?.status?.message || 'Error User Login', 'Error');
         this.submitted.set(false);
       },
     });

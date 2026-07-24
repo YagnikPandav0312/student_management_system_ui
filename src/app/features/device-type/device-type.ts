@@ -85,7 +85,7 @@ export class DeviceType implements OnInit {
       },
       error: (err: any) => {
         this.commonService.hideSpinner();
-        this.toastr.error(err.error?.message || 'Error occurred while loading device types');
+        this.toastr.error(err.error?.status?.message || 'Error occurred while loading device types');
       },
     });
   }
@@ -146,7 +146,7 @@ export class DeviceType implements OnInit {
           },
           error: (err) => {
             this.commonService.hideSpinner();
-            this.toastr.error(err.error?.message || 'Error occurred while deleting device type');
+            this.toastr.error(err.error?.status?.message || 'Error occurred while deleting device type');
           },
         });
       }
@@ -173,7 +173,7 @@ export class DeviceType implements OnInit {
       },
       error: (err) => {
         this.commonService.hideSpinner();
-        this.toastr.error(err.error?.message || 'Error occurred while updating device type status');
+        this.toastr.error(err.error?.status?.message || 'Error occurred while updating device type status');
       },
     });
   }

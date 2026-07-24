@@ -5,6 +5,7 @@ import { Common } from '../../core/services/common';
 import { DashboardStatistics } from '../../model/dashboard.model';
 import { BaseResponse, getPayloadReq } from '../../model/api.model';
 import { RouterLink } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,6 +16,7 @@ import { RouterLink } from '@angular/router';
 })
 export class Dashboard implements OnInit {
   statistics = signal<DashboardStatistics | null>(null);
+  toastr = inject(ToastrService);
   fullName = signal<string>('Guest');
   today = new Date();
 
@@ -62,7 +64,7 @@ export class Dashboard implements OnInit {
       },
       error: (err) => {
         this.commonService.hideSpinner();
-        console.error('Failed to load dashboard statistics', err);
+        this.toastr.error(err.error?.status?.message || 'Error occurred while loading dashboard');
       },
     });
   }

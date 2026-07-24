@@ -51,15 +51,15 @@ export class Header implements OnInit {
     modalRef.componentInstance.onClose.subscribe((returnData: any) => {
       if (returnData) {
         this.authService.logout(this.commonService.getUserId()).subscribe({
-          next: (data) => {
+          next: (res) => {
             localStorage.clear();
             this.router.navigate(['/login']);
-            this.toastr.success(data.status.message);
+            this.commonService.manageStatus(res.status);
           },
           error: (err) => {
             localStorage.clear();
             this.router.navigate(['/login']);
-            this.toastr.error(err.status.message);
+            this.toastr.error(err.error?.status?.message || 'Error occurred while Logout');
           }
         });
       }

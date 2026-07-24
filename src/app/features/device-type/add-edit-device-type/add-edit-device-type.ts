@@ -98,7 +98,7 @@ export class AddEditDeviceType implements OnInit {
         },
         error: (err) => {
           this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'An error occurred while updating device type');
+          this.toastr.error(err.error?.status?.message || 'An error occurred while updating device type');
         },
       });
     } else {
@@ -116,7 +116,7 @@ export class AddEditDeviceType implements OnInit {
         },
         error: (err) => {
           this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'An error occurred while creating device type');
+          this.toastr.error(err.error?.status?.message || 'An error occurred while creating device type');
         },
       });
     }

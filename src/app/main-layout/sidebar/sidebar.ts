@@ -32,17 +32,17 @@ export class Sidebar {
     modalRef.componentInstance.onClose.subscribe((returnData: any) => {
       if (returnData) {
         this.authService.logout(this.commonService.getUserId()).subscribe({
-          next: (data) => {
+          next: (res) => {
             this.router.navigate(['/login']);
             localStorage.clear();
-            this.toastr.success(data.status.message);
+            this.commonService.manageStatus(res.status);
             this.common.closeSidebar();
           },
           error: (err) => {
             console.error('Logout error:', err);
             this.router.navigate(['/login']);
             localStorage.clear();
-            this.toastr.error(err.status.message);
+            this.toastr.error(err.error?.status?.message || 'Error occurred while Logout');
           }
         });
       }

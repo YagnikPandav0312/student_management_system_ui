@@ -77,7 +77,7 @@ export class AddEditPlayer implements OnInit {
         },
         error: (err) => {
           this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'An error occurred while updating player');
+          this.toastr.error(err.error?.status?.message || 'An error occurred while updating player');
         },
       });
     } else {
@@ -95,7 +95,7 @@ export class AddEditPlayer implements OnInit {
         },
         error: (err) => {
           this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'An error occurred while creating player');
+          this.toastr.error(err.error?.status?.message || 'An error occurred while creating player');
         },
       });
     }

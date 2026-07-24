@@ -20,8 +20,11 @@ export class ProviderService {
     );
   }
 
-  getProviderById(id: number | string): Observable<BaseResponse<ProviderList>> {
-    return this.http.get<BaseResponse<ProviderList>>(`${this.baseUrl}${API.providers_api.get_provider_by_id}/${id}`);
+  getProviderById(id: number | string, user_id: number): Observable<BaseResponse<ProviderList>> {
+    return this.http.post<BaseResponse<ProviderList>>(`${this.baseUrl}${API.providers_api.get_provider_by_id}`, {
+      provider_id: id,
+      user_id: user_id
+    });
   }
 
   createProvider(formData: FormData): Observable<BaseResponse<ProviderList>> {
@@ -33,10 +36,10 @@ export class ProviderService {
   }
 
   deleteProvider(paylaod: any): Observable<BaseResponse<any>> {
-    return this.http.post<BaseResponse<any>>(`${this.baseUrl}${API.providers_api.delete_provider}`,paylaod);
+    return this.http.post<BaseResponse<any>>(`${this.baseUrl}${API.providers_api.delete_provider}`, paylaod);
   }
 
-  updateProviderStatus(payload:any): Observable<BaseResponse<any>> {
+  updateProviderStatus(payload: any): Observable<BaseResponse<any>> {
     return this.http.post<BaseResponse<any>>(`${this.baseUrl}${API.providers_api.update_provider_status}`, payload);
   }
 

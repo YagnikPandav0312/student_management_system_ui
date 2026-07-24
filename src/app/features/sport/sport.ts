@@ -80,7 +80,7 @@ export class Sport implements OnInit {
       },
       error: (err: any) => {
         this.commonService.hideSpinner();
-        this.toastr.error(err.error?.message || 'Error occurred while loading sports');
+        this.toastr.error(err.error?.status?.message || 'Error occurred while loading sports');
       },
     });
   }
@@ -139,7 +139,7 @@ export class Sport implements OnInit {
           },
           error: (err) => {
             this.commonService.hideSpinner();
-            this.toastr.error(err.error?.message || 'Error occurred while deleting sport');
+            this.toastr.error(err.error?.status?.message || 'Error occurred while deleting sport');
           },
         });
       }
@@ -166,7 +166,7 @@ export class Sport implements OnInit {
       },
       error: (err) => {
         this.commonService.hideSpinner();
-        this.toastr.error(err.error?.message || 'Error occurred while updating sport status');
+        this.toastr.error(err.error?.status?.message || 'Error occurred while updating sport status');
       },
     });
   }

@@ -85,7 +85,7 @@ export class GameType implements OnInit {
       },
       error: (err: any) => {
         this.commonService.hideSpinner();
-        this.toastr.error(err.error?.message || 'Error occurred while loading game types');
+        this.toastr.error(err.error?.status?.message || 'Error occurred while loading game types');
       },
     });
   }
@@ -146,7 +146,7 @@ export class GameType implements OnInit {
           },
           error: (err) => {
             this.commonService.hideSpinner();
-            this.toastr.error(err.error?.message || 'Error occurred while deleting game type');
+            this.toastr.error(err.error?.status?.message || 'Error occurred while deleting game type');
           },
         });
       }

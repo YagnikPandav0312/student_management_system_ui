@@ -135,7 +135,7 @@ export class AddEditSport implements OnInit {
         },
         error: (err) => {
           this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'An error occurred while updating sport');
+          this.toastr.error(err.error?.status?.message || 'An error occurred while updating sport');
         },
       });
     } else {
@@ -151,7 +151,7 @@ export class AddEditSport implements OnInit {
         },
         error: (err) => {
           this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'An error occurred while creating sport');
+          this.toastr.error(err.error?.status?.message || 'An error occurred while creating sport');
         },
       });
     }

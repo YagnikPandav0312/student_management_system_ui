@@ -100,7 +100,7 @@ export class AddEditGametype implements OnInit {
         },
         error: (err) => {
           this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'An error occurred while updating game type');
+          this.toastr.error(err.error?.status?.message || 'An error occurred while updating game type');
         },
       });
     } else {
@@ -118,7 +118,7 @@ export class AddEditGametype implements OnInit {
         },
         error: (err) => {
           this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'An error occurred while creating game type');
+          this.toastr.error(err.error?.status?.message || 'An error occurred while creating game type');
         },
       });
     }

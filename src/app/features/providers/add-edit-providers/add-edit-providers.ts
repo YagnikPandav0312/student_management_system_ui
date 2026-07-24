@@ -137,7 +137,7 @@ export class AddEditProviders implements OnInit {
         },
         error: (err) => {
           this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'An error occurred while updating provider');
+          this.toastr.error(err.error?.status?.message || 'An error occurred while updating provider');
         },
       });
     } else {
@@ -155,7 +155,7 @@ export class AddEditProviders implements OnInit {
         },
         error: (err) => {
           this.commonService.hideSpinner();
-          this.toastr.error(err.error?.message || 'An error occurred while creating provider');
+          this.toastr.error(err.error?.status?.message || 'An error occurred while creating provider');
         },
       });
     }

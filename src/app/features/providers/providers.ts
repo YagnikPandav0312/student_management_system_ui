@@ -81,7 +81,7 @@ export class Providers implements OnInit {
       },
       error: (err: any) => {
         this.commonService.hideSpinner();
-        this.toastr.error(err.error?.message || 'Error occurred while loading providers');
+        this.toastr.error(err.error?.status?.message || 'Error occurred while loading providers');
       },
     });
   }
@@ -140,7 +140,7 @@ export class Providers implements OnInit {
           },
           error: (err) => {
             this.commonService.hideSpinner();
-            this.toastr.error(err.error?.message || 'Error occurred while deleting provider');
+            this.toastr.error(err.error?.status?.message || 'Error occurred while deleting provider');
           },
         });
       }
@@ -167,7 +167,7 @@ export class Providers implements OnInit {
       },
       error: (err) => {
         this.commonService.hideSpinner();
-        this.toastr.error(err.error?.message || 'Error occurred while updating provider status');
+        this.toastr.error(err.error?.status?.message || 'Error occurred while updating provider status');
       },
     });
   }
