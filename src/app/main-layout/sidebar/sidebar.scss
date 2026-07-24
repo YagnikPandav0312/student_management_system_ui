@@ -43,6 +43,28 @@
 .menu-section {
   padding: 24px 16px 8px;
   
+  &.main-navigation {
+    flex: 1;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 10px;
+
+      &:hover {
+        background: #334155;
+      }
+    }
+  }
+  
   &.footer-section {
     margin-top: auto;
     padding-bottom: 24px;
